@@ -73,14 +73,12 @@ export default function BookingDetail() {
   }
 
   async function handleCancel() {
-    if (!booking || !user) return;
-    const detailInterval = detail?.booking?.intervals?.[0];
-    if (!detailInterval?.bookingInIntervalId) return;
+    if (!booking || !user || !userEntry) return;
 
     setBookingInProgress(true);
     setBookingError(null);
     try {
-      await cancelBooking(booking.id, detailInterval.bookingInIntervalId, user.token);
+      await cancelBooking(booking.id, userEntry.id, user.token);
       loadDetail();
     } catch (err) {
       setBookingError(err instanceof Error ? err.message : 'Annullering fejlede');
@@ -133,6 +131,16 @@ export default function BookingDetail() {
   const participants = showNames ? (detailInterval?.bookings ?? []) : [];
   const waitingList = showWaitingPublic ? (detailInterval?.waitingList ?? []) : [];
   const waitingCount = detailInterval?.numberOfWaitingListEntries ?? 0;
+
+  // Check if logged-in user is in participants or waiting list by memberId
+  const allEntries = [
+    ...(detailInterval?.bookings ?? []),
+    ...(detailInterval?.waitingList ?? []),
+  ];
+  const userEntry = user
+    ? allEntries.find((e) => e.bookedTo?.id === user.memberId)
+    : null;
+  const isBooked = !!userEntry;
 
   return (
     <main className="max-w-2xl mx-auto px-4 pt-4 pb-10">
@@ -248,38 +256,31 @@ export default function BookingDetail() {
                 {bookingError}
               </p>
             )}
-            {(() => {
-              const detailInterval = detail?.booking?.intervals?.[0];
-              const isBooked = detailInterval?.memberBooked || detailInterval?.memberAddedToWaitingList;
-              if (isBooked) {
-                return (
-                  <button
-                    onClick={handleCancel}
-                    disabled={bookingInProgress || !detail}
-                    className="w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors disabled:opacity-60 border border-red-200 text-red-600 hover:bg-red-50"
-                  >
-                    {bookingInProgress ? 'Annullerer…' : 'Annuller'}
-                  </button>
-                );
-              }
-              return (
-                <button
-                  onClick={handleBook}
-                  disabled={bookingInProgress || !detail}
-                  className={`w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors disabled:opacity-60 ${
-                    booking.isAvailable
-                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                      : 'bg-amber-500 text-white hover:bg-amber-600'
-                  }`}
-                >
-                  {bookingInProgress
-                    ? 'Booker…'
-                    : booking.isAvailable
-                    ? 'Book plads'
-                    : 'Tilmeld venteliste'}
-                </button>
-              );
-            })()}
+            {isBooked ? (
+              <button
+                onClick={handleCancel}
+                disabled={bookingInProgress || !detail}
+                className="w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors disabled:opacity-60 border border-red-200 text-red-600 hover:bg-red-50"
+              >
+                {bookingInProgress ? 'Annullerer…' : 'Annuller'}
+              </button>
+            ) : (
+              <button
+                onClick={handleBook}
+                disabled={bookingInProgress || !detail}
+                className={`w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors disabled:opacity-60 ${
+                  booking.isAvailable
+                    ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                    : 'bg-amber-500 text-white hover:bg-amber-600'
+                }`}
+              >
+                {bookingInProgress
+                  ? 'Booker…'
+                  : booking.isAvailable
+                  ? 'Book plads'
+                  : 'Tilmeld venteliste'}
+              </button>
+            )}
           </div>
         ) : (
           <p className="text-sm text-center text-gray-400 mt-1">
