@@ -12,6 +12,26 @@ export interface BookingInInterval {
   attendance: boolean;
 }
 
+export interface OnlineSettings {
+  id: number;
+  organization: { id: number; name: string };
+  organizationalUnit: { department: number; name: string };
+  paymentCard: boolean;
+  showPersonsName: boolean;
+  showWaitingList: boolean;
+  showWaitingListPublic: boolean;
+  showComment: boolean;
+  showCommentPublic: boolean;
+  allowCancellation: boolean;
+  allowCancellationTime: string | null;
+  onlyLimitGroups: boolean;
+  sendReceiptByEmail: boolean;
+  waitingListEnabled?: boolean;
+  commentsAllowed?: boolean;
+  departmentRequired?: boolean;
+  [key: string]: unknown;
+}
+
 export interface IntervalDetail {
   id: number;
   maxParticipants: number;
@@ -26,6 +46,10 @@ export interface IntervalDetail {
   memberAddedToWaitingList: boolean;
   waitingListPosition: number | null;
   bookingInIntervalId: number | null;
+  onlineSettings?: OnlineSettings | null;
+  waitingListEnabled?: boolean;
+  commentsAllowed?: boolean;
+  departmentRequired?: boolean;
 }
 
 // Alias used in list context (waitingList is boolean there)

@@ -1,4 +1,4 @@
-import { type Booking, type DisplayBooking, type ResourceBookings, type BookingDetailResponse, type AuthProfile } from './types';
+import { type Booking, type DisplayBooking, type ResourceBookings, type BookingDetailResponse, type AuthProfile, type IntervalDetail } from './types';
 
 const API_BASE = 'https://www.conventus.dk';
 const ORGANIZATION_ID = 17742;
@@ -100,4 +100,71 @@ export async function login(email: string, password: string): Promise<AuthProfil
   }
 
   return profiles[0];
+}
+
+export async function bookSession(
+  booking: Booking,
+  detailInterval: IntervalDetail,
+  token: string
+): Promise<void> {
+  const pad = (n: number) => String(n).padStart(2, '0');
+  const fmtDT = (ts: number) => {
+    const d = new Date(ts);
+    return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
+  };
+
+  const listInterval = booking.intervals?.[0];
+  const namesOfParticipants = (detailInterval.bookings ?? [])
+    .map((b) => b.bookedTo?.name)
+    .filter((n): n is string => !!n);
+  const waitingListIsActive = (detailInterval.numberOfWaitingListEntries ?? 0) > 0;
+
+  const payload = {
+    bookingTime: {
+      start: fmtDT(booking.start),
+      end: fmtDT(booking.end),
+      paymentOptions: { creditCard: false, account: false },
+      resource: booking.resource,
+      interval: {
+        serieId: booking.serie ?? null,
+        bookingId: booking.id,
+        intervalId: listInterval?.id ?? detailInterval.id,
+        maxParticipants: detailInterval.maxParticipants,
+        numberOfParticipants: detailInterval.numberOfBookings,
+        namesOfParticipants,
+        waitingList: waitingListIsActive,
+        membersOnwaitingList: detailInterval.numberOfWaitingListEntries ?? 0,
+        namesOfMembersOnWaitingList: null,
+        onlineSettings: detailInterval.onlineSettings ?? null,
+        comments: null,
+        waitingListEnabled: detailInterval.waitingListEnabled ?? true,
+        commentsAllowed: detailInterval.commentsAllowed ?? false,
+        departmentRequired: detailInterval.departmentRequired ?? false,
+      },
+      participants: [],
+    },
+    creditCard: false,
+    account: false,
+    comment: null,
+    department: null,
+    sendEmailReceipt: false,
+  };
+
+  const response = await fetch(`${API_BASE}/publicBooking/online/book`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!response.ok) {
+    let message = 'Booking fejlede';
+    try {
+      const err = await response.json();
+      if (err?.message) message = err.message;
+    } catch { /* ignore */ }
+    throw new Error(message);
+  }
 }

@@ -1,18 +1,17 @@
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { addDays } from 'date-fns';
-import { fetchBookings, fetchBookingDetail } from '../api';
+import { fetchBookings, fetchBookingDetail, bookSession } from '../api';
+import { useAuth } from '../context/AuthContext';
 import type { DisplayBooking, BookingDetailResponse } from '../types';
-
-const BOOK_BASE = 'https://www.conventus.dk/dataudv/www/booking_v2_interval.php';
-const FORENING_ID = 17742;
 
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { user } = useAuth();
 
   const [booking, setBooking] = useState<DisplayBooking | null>(
     state as DisplayBooking | null
@@ -21,6 +20,17 @@ export default function BookingDetail() {
   const [loading, setLoading] = useState(!state);
   const [detailLoading, setDetailLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [bookingInProgress, setBookingInProgress] = useState(false);
+  const [bookingError, setBookingError] = useState<string | null>(null);
+
+  const loadDetail = useCallback(() => {
+    if (!id) return;
+    setDetailLoading(true);
+    fetchBookingDetail(id)
+      .then(setDetail)
+      .catch(() => {/* silently ignore */})
+      .finally(() => setDetailLoading(false));
+  }, [id]);
 
   // Fallback: fetch list if we arrived via direct URL (no router state)
   useEffect(() => {
@@ -42,13 +52,25 @@ export default function BookingDetail() {
 
   // Fetch detailed data (participants) for this booking
   useEffect(() => {
-    if (!id) return;
+    loadDetail();
+  }, [loadDetail]);
 
-    fetchBookingDetail(id)
-      .then(setDetail)
-      .catch(() => {/* silently ignore — participant list just won't show */})
-      .finally(() => setDetailLoading(false));
-  }, [id]);
+  async function handleBook() {
+    if (!booking || !user) return;
+    const detailInterval = detail?.booking?.intervals?.[0];
+    if (!detailInterval) return;
+
+    setBookingInProgress(true);
+    setBookingError(null);
+    try {
+      await bookSession(booking, detailInterval, user.token);
+      loadDetail();
+    } catch (err) {
+      setBookingError(err instanceof Error ? err.message : 'Booking fejlede');
+    } finally {
+      setBookingInProgress(false);
+    }
+  }
 
   if (loading) {
     return (
@@ -79,7 +101,6 @@ export default function BookingDetail() {
 
   const startDate = new Date(booking.start);
   const endDate = new Date(booking.end);
-  const bookUrl = `${BOOK_BASE}?forening=${FORENING_ID}&booking=${booking.id}`;
 
   const filledPct =
     booking.totalSpots > 0
@@ -203,16 +224,34 @@ export default function BookingDetail() {
         )}
 
         {/* Book / Venteliste button */}
-        <a
-          href={bookUrl}
-          className={`w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors mt-1 ${
-            booking.isAvailable
-              ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-              : 'bg-amber-500 text-white hover:bg-amber-600'
-          }`}
-        >
-          {booking.isAvailable ? 'Book plads' : 'Tilmeld venteliste'}
-        </a>
+        {user ? (
+          <div className="flex flex-col gap-2 mt-1">
+            {bookingError && (
+              <p className="text-sm text-red-600 bg-red-50 rounded-lg px-3 py-2">
+                {bookingError}
+              </p>
+            )}
+            <button
+              onClick={handleBook}
+              disabled={bookingInProgress || !detail}
+              className={`w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors disabled:opacity-60 ${
+                booking.isAvailable
+                  ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                  : 'bg-amber-500 text-white hover:bg-amber-600'
+              }`}
+            >
+              {bookingInProgress
+                ? 'Booker…'
+                : booking.isAvailable
+                ? 'Book plads'
+                : 'Tilmeld venteliste'}
+            </button>
+          </div>
+        ) : (
+          <p className="text-sm text-center text-gray-400 mt-1">
+            <span className="text-indigo-600 font-medium">Log ind</span> for at booke en plads
+          </p>
+        )}
       </div>
     </main>
   );
