@@ -45,12 +45,10 @@ export default function WeekGroup({ weekNumber, bookings }: Props) {
                 {format(new Date(dateKey), 'EEEE d. MMM', { locale: da })}
               </p>
             </div>
-            {/* Cards in a horizontal wrapping row — fixed width, no grow */}
-            <div className="flex flex-wrap gap-3">
+            {/* Cards in a responsive grid — 1 col on mobile, 2 on tablet, 3 on desktop */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
               {dayBookings.map((booking) => (
-                <div key={booking.id} className="w-64 shrink-0">
-                  <BookingCard booking={booking} />
-                </div>
+                <BookingCard key={booking.id} booking={booking} />
               ))}
             </div>
           </div>
