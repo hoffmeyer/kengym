@@ -100,3 +100,21 @@ export interface BookingDetailResponse {
   settings: BookingDetailSettings;
 }
 
+// Auth
+export interface AuthProfile {
+  memberId: number;
+  name: string;
+  token: string;
+}
+
+export interface AuthResponse {
+  organizationName: string;
+  profiles: AuthProfile[];
+}
+
+export interface SessionUser {
+  memberId: number;
+  name: string;
+  token: string;
+}
+

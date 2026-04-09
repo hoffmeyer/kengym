@@ -1,4 +1,4 @@
-import { type Booking, type DisplayBooking, type ResourceBookings, type BookingDetailResponse } from './types';
+import { type Booking, type DisplayBooking, type ResourceBookings, type BookingDetailResponse, type AuthProfile } from './types';
 
 const API_BASE = 'https://www.conventus.dk';
 const ORGANIZATION_ID = 17742;
@@ -72,4 +72,32 @@ export async function fetchBookingDetail(id: number | string): Promise<BookingDe
   }
 
   return response.json();
+}
+
+export async function login(email: string, password: string): Promise<AuthProfile> {
+  const response = await fetch(`${API_BASE}/heimdall/rest/auth/member`, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      country: null,
+      phoneNumber: null,
+      email,
+      password,
+      passwordHashed: false,
+      organization: ORGANIZATION_ID,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Forkert e-mail eller adgangskode');
+  }
+
+  const data = await response.json();
+  const profiles: AuthProfile[] = data.profiles;
+
+  if (!profiles || profiles.length === 0) {
+    throw new Error('Ingen profiler fundet');
+  }
+
+  return profiles[0];
 }
