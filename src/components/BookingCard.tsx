@@ -34,7 +34,7 @@ export default function BookingCard({ booking }: Props) {
         sm+: single flex row
           [time] [description …flex-1] [bar+spots] [badge+btn]
       */}
-      <div className="grid grid-cols-[1fr_auto] grid-rows-2 gap-x-3 gap-y-2 sm:flex sm:flex-row sm:items-center sm:gap-4">
+      <div className="grid grid-cols-[1fr_8rem] grid-rows-2 gap-x-3 gap-y-2 sm:flex sm:flex-row sm:items-center sm:gap-4">
 
         {/* Time — col1 row1 on mobile; leftmost on desktop */}
         <p className="text-sm font-semibold text-indigo-600 whitespace-nowrap self-center">
