@@ -1,6 +1,13 @@
-import { type Booking, type DisplayBooking, type ResourceBookings, type BookingDetailResponse, type AuthProfile, type IntervalDetail } from './types';
+import {
+  type Booking,
+  type DisplayBooking,
+  type ResourceBookings,
+  type BookingDetailResponse,
+  type AuthProfile,
+  type IntervalDetail,
+} from "./types";
 
-const API_BASE = 'https://www.conventus.dk';
+const API_BASE = "https://www.conventus.dk";
 const ORGANIZATION_ID = 17742;
 const RESOURCE_ID = 44493;
 
@@ -14,22 +21,28 @@ function toDisplayBooking(booking: Booking): DisplayBooking {
     ? interval.waitingList.length > 0
     : false;
 
-  return { ...booking, availableSpots, totalSpots, isAvailable, hasWaitingList };
+  return {
+    ...booking,
+    availableSpots,
+    totalSpots,
+    isAvailable,
+    hasWaitingList,
+  };
 }
 
 export async function fetchBookings(
   fromDate: Date,
-  toDate: Date
+  toDate: Date,
 ): Promise<DisplayBooking[]> {
-  const pad = (n: number) => String(n).padStart(2, '0');
+  const pad = (n: number) => String(n).padStart(2, "0");
   const fmt = (d: Date) =>
     `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T00:00:00`;
   const fmtEnd = (d: Date) =>
     `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T23:59:59`;
 
   const response = await fetch(`${API_BASE}/publicBooking/public/getBookings`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       from: fmt(fromDate),
       to: fmtEnd(toDate),
@@ -50,7 +63,7 @@ export async function fetchBookings(
   for (const resourceEntry of data) {
     for (const booking of resourceEntry.bookings) {
       // Only include interval (online-bookable) bookings
-      if (booking.bookingType === 'interval') {
+      if (booking.bookingType === "interval") {
         allBookings.push(toDisplayBooking(booking));
       }
     }
@@ -62,9 +75,11 @@ export async function fetchBookings(
   return allBookings;
 }
 
-export async function fetchBookingDetail(id: number | string): Promise<BookingDetailResponse> {
+export async function fetchBookingDetail(
+  id: number | string,
+): Promise<BookingDetailResponse> {
   const response = await fetch(
-    `${API_BASE}/publicBooking/public/intervalbooking/${id}`
+    `${API_BASE}/publicBooking/public/intervalbooking/${id}`,
   );
 
   if (!response.ok) {
@@ -74,10 +89,13 @@ export async function fetchBookingDetail(id: number | string): Promise<BookingDe
   return response.json();
 }
 
-export async function login(email: string, password: string): Promise<AuthProfile> {
+export async function login(
+  email: string,
+  password: string,
+): Promise<AuthProfile> {
   const response = await fetch(`${API_BASE}/heimdall/rest/auth/member`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
       country: null,
       phoneNumber: null,
@@ -89,14 +107,14 @@ export async function login(email: string, password: string): Promise<AuthProfil
   });
 
   if (!response.ok) {
-    throw new Error('Forkert e-mail eller adgangskode');
+    throw new Error("Forkert e-mail eller adgangskode");
   }
 
   const data = await response.json();
   const profiles: AuthProfile[] = data.profiles;
 
   if (!profiles || profiles.length === 0) {
-    throw new Error('Ingen profiler fundet');
+    throw new Error("Ingen profiler fundet");
   }
 
   return profiles[0];
@@ -105,9 +123,9 @@ export async function login(email: string, password: string): Promise<AuthProfil
 export async function bookSession(
   booking: Booking,
   detailInterval: IntervalDetail,
-  token: string
+  token: string,
 ): Promise<void> {
-  const pad = (n: number) => String(n).padStart(2, '0');
+  const pad = (n: number) => String(n).padStart(2, "0");
   const fmtDT = (ts: number) => {
     const d = new Date(ts);
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
@@ -117,7 +135,8 @@ export async function bookSession(
   const namesOfParticipants = (detailInterval.bookings ?? [])
     .map((b) => b.bookedTo?.name)
     .filter((n): n is string => !!n);
-  const waitingListIsActive = (detailInterval.numberOfWaitingListEntries ?? 0) > 0;
+  const waitingListIsActive =
+    (detailInterval.numberOfWaitingListEntries ?? 0) > 0;
 
   const payload = {
     bookingTime: {
@@ -151,20 +170,22 @@ export async function bookSession(
   };
 
   const response = await fetch(`${API_BASE}/publicBooking/online/book`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify(payload),
   });
 
   if (!response.ok) {
-    let message = 'Booking fejlede';
+    let message = "Booking fejlede";
     try {
       const err = await response.json();
       if (err?.message) message = err.message;
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     throw new Error(message);
   }
 }
