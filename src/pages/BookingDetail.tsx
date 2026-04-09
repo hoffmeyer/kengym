@@ -26,11 +26,11 @@ export default function BookingDetail() {
   const loadDetail = useCallback(() => {
     if (!id) return;
     setDetailLoading(true);
-    fetchBookingDetail(id)
+    fetchBookingDetail(id, user?.token)
       .then(setDetail)
       .catch(() => {/* silently ignore */})
       .finally(() => setDetailLoading(false));
-  }, [id]);
+  }, [id, user?.token]);
 
   // Fallback: fetch list if we arrived via direct URL (no router state)
   useEffect(() => {

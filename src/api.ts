@@ -77,9 +77,11 @@ export async function fetchBookings(
 
 export async function fetchBookingDetail(
   id: number | string,
+  token?: string,
 ): Promise<BookingDetailResponse> {
   const response = await fetch(
     `${API_BASE}/publicBooking/public/intervalbooking/${id}`,
+    token ? { headers: { Authorization: token } } : undefined,
   );
 
   if (!response.ok) {
