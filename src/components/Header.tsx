@@ -9,7 +9,7 @@ export default function Header() {
         />
         <div>
           <h1 className="text-white text-xl font-bold leading-tight">
-            Hvidovre Atletik & Motion
+            Kænturjon gym
           </h1>
           <p className="text-gray-400 text-sm">CrossFit – Holdtræning</p>
         </div>
