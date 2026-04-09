@@ -11,7 +11,7 @@ export default function BookingCard({ booking }: Props) {
   const endDate = new Date(booking.end);
 
   const timeRange = `${format(startDate, 'HH:mm')} – ${format(endDate, 'HH:mm')}`;
-  const spotsLabel = `${booking.availableSpots} / ${booking.totalSpots} pladser`;
+  const spotsLabel = `${booking.availableSpots} / ${booking.totalSpots}`;
 
   const fillPct =
     booking.totalSpots > 0
