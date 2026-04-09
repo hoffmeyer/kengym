@@ -1,12 +1,10 @@
 import { format } from 'date-fns';
+import { Link } from 'react-router-dom';
 import type { DisplayBooking } from '../types';
 
 interface Props {
   booking: DisplayBooking;
 }
-
-const BOOK_BASE = 'https://www.conventus.dk/dataudv/www/booking_v2_interval.php';
-const FORENING_ID = 17742;
 
 export default function BookingCard({ booking }: Props) {
   const startDate = new Date(booking.start);
@@ -14,7 +12,6 @@ export default function BookingCard({ booking }: Props) {
 
   const timeRange = `${format(startDate, 'HH:mm')} – ${format(endDate, 'HH:mm')}`;
   const spotsLabel = `${booking.availableSpots} / ${booking.totalSpots} pladser`;
-  const bookUrl = `${BOOK_BASE}?forening=${FORENING_ID}&booking=${booking.id}`;
 
   return (
     <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-4 flex flex-col gap-3 h-full">
@@ -72,8 +69,9 @@ export default function BookingCard({ booking }: Props) {
             <span className="text-xs text-gray-400 shrink-0">{spotsLabel}</span>
           </div>
 
-          <a
-            href={bookUrl}
+          <Link
+            to={`/booking/${booking.id}`}
+            state={booking}
             className={`w-full text-center rounded-lg py-2 text-xs font-medium transition-colors border ${
               booking.isAvailable
                 ? 'border-indigo-200 text-indigo-600 hover:bg-indigo-50'
@@ -81,7 +79,7 @@ export default function BookingCard({ booking }: Props) {
             }`}
           >
             {booking.isAvailable ? 'Book' : 'Venteliste'}
-          </a>
+          </Link>
         </div>
       )}
     </div>

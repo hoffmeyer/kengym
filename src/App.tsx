@@ -1,11 +1,13 @@
+import { Routes, Route } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { addDays } from 'date-fns';
 import { fetchBookings } from './api';
 import type { DisplayBooking } from './types';
 import Header from './components/Header';
 import BookingList from './components/BookingList';
+import BookingDetail from './pages/BookingDetail';
 
-export default function App() {
+function ListPage() {
   const [bookings, setBookings] = useState<DisplayBooking[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -21,11 +23,20 @@ export default function App() {
   }, []);
 
   return (
+    <main className="max-w-2xl mx-auto">
+      <BookingList bookings={bookings} loading={loading} error={error} />
+    </main>
+  );
+}
+
+export default function App() {
+  return (
     <div className="min-h-screen bg-gray-100">
       <Header />
-      <main className="max-w-2xl mx-auto">
-        <BookingList bookings={bookings} loading={loading} error={error} />
-      </main>
+      <Routes>
+        <Route path="/" element={<ListPage />} />
+        <Route path="/booking/:id" element={<BookingDetail />} />
+      </Routes>
     </div>
   );
 }

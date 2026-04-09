@@ -36,9 +36,18 @@ https://www.conventus.dk/dataudv/www/booking_v2_liste_link.php
 | 12 | The club **logo** and name appear in a persistent header at the top of the page |
 | 13 | Loading skeleton, error state, and empty state are all handled |
 
-### Out of scope (Phase 1)
+### Phase 2 (implemented)
 
-- In-app booking flow (button links out to Conventus)
+| # | Requirement |
+|---|-------------|
+| 14 | Clicking Book/Venteliste navigates to an **in-app detail page** (`/booking/:id`) instead of leaving the site |
+| 15 | Detail page shows full information: title, date, time, status chip, spots fill bar, waiting list count, location/resource, department, group, and optional description |
+| 16 | Detail page has a **back button** using browser history |
+| 17 | Detail page has a **Book / Venteliste button** linking out to Conventus (login & booking handled there) |
+
+### Out of scope (Phase 1 & 2)
+
+- In-app booking flow
 - Authentication / member login
 - Filtering or searching bookings
 - Push notifications or reminders
@@ -54,6 +63,7 @@ https://www.conventus.dk/dataudv/www/booking_v2_liste_link.php
 | **Vite + React 18 + TypeScript** | Fast dev server, first-class TypeScript support, minimal boilerplate |
 | **Tailwind CSS v4** (with `@tailwindcss/vite`) | Utility-first styling with no config file needed in v4; Vite plugin avoids PostCSS setup |
 | **date-fns** | Lightweight, tree-shakeable date utilities; used for formatting, ISO week numbers, and week boundary calculation |
+| **React Router v7** | Client-side routing; booking state passed via router `state` to avoid redundant API calls on navigation |
 
 ### API
 
@@ -71,7 +81,15 @@ Available spots are derived from the first interval entry:
 ```
 availableSpots = interval.maxParticipants - interval.numberOfBookings
 isAvailable    = availableSpots > 0
+waitingListCount = interval.numberOfWaitingListEntries
 ```
+
+### Routing
+
+- `/` — booking list (4 weeks forward)
+- `/booking/:id` — booking detail
+
+When navigating from the list, the full `DisplayBooking` object is passed via React Router `state` to avoid a second API call. If the detail page is loaded directly (e.g. from a bookmark), it falls back to re-fetching all bookings and finding the matching ID.
 
 ### Layout
 
