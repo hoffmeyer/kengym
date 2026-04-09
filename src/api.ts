@@ -189,3 +189,28 @@ export async function bookSession(
     throw new Error(message);
   }
 }
+
+export async function cancelBooking(
+  bookingId: number,
+  bookingInIntervalId: number,
+  token: string,
+): Promise<void> {
+  const url = `${API_BASE}/publicBooking/online/cancelMemberBooking?bookingId=${bookingId}&bookingInIntervalId=${bookingInIntervalId}`;
+  const response = await fetch(url, {
+    method: "DELETE",
+    headers: {
+      Authorization: token,
+    },
+  });
+
+  if (!response.ok) {
+    let message = "Annullering fejlede";
+    try {
+      const err = await response.json();
+      if (err?.message) message = err.message;
+    } catch {
+      /* ignore */
+    }
+    throw new Error(message);
+  }
+}

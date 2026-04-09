@@ -3,7 +3,7 @@ import { useEffect, useState, useCallback } from 'react';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { addDays } from 'date-fns';
-import { fetchBookings, fetchBookingDetail, bookSession } from '../api';
+import { fetchBookings, fetchBookingDetail, bookSession, cancelBooking } from '../api';
 import { useAuth } from '../context/AuthContext';
 import type { DisplayBooking, BookingDetailResponse } from '../types';
 
@@ -67,6 +67,23 @@ export default function BookingDetail() {
       loadDetail();
     } catch (err) {
       setBookingError(err instanceof Error ? err.message : 'Booking fejlede');
+    } finally {
+      setBookingInProgress(false);
+    }
+  }
+
+  async function handleCancel() {
+    if (!booking || !user) return;
+    const detailInterval = detail?.booking?.intervals?.[0];
+    if (!detailInterval?.bookingInIntervalId) return;
+
+    setBookingInProgress(true);
+    setBookingError(null);
+    try {
+      await cancelBooking(booking.id, detailInterval.bookingInIntervalId, user.token);
+      loadDetail();
+    } catch (err) {
+      setBookingError(err instanceof Error ? err.message : 'Annullering fejlede');
     } finally {
       setBookingInProgress(false);
     }
@@ -223,7 +240,7 @@ export default function BookingDetail() {
           </div>
         )}
 
-        {/* Book / Venteliste button */}
+        {/* Book / Cancel / Venteliste button */}
         {user ? (
           <div className="flex flex-col gap-2 mt-1">
             {bookingError && (
@@ -231,21 +248,38 @@ export default function BookingDetail() {
                 {bookingError}
               </p>
             )}
-            <button
-              onClick={handleBook}
-              disabled={bookingInProgress || !detail}
-              className={`w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors disabled:opacity-60 ${
-                booking.isAvailable
-                  ? 'bg-indigo-600 text-white hover:bg-indigo-700'
-                  : 'bg-amber-500 text-white hover:bg-amber-600'
-              }`}
-            >
-              {bookingInProgress
-                ? 'Booker…'
-                : booking.isAvailable
-                ? 'Book plads'
-                : 'Tilmeld venteliste'}
-            </button>
+            {(() => {
+              const detailInterval = detail?.booking?.intervals?.[0];
+              const isBooked = detailInterval?.memberBooked || detailInterval?.memberAddedToWaitingList;
+              if (isBooked) {
+                return (
+                  <button
+                    onClick={handleCancel}
+                    disabled={bookingInProgress || !detail}
+                    className="w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors disabled:opacity-60 border border-red-200 text-red-600 hover:bg-red-50"
+                  >
+                    {bookingInProgress ? 'Annullerer…' : 'Annuller'}
+                  </button>
+                );
+              }
+              return (
+                <button
+                  onClick={handleBook}
+                  disabled={bookingInProgress || !detail}
+                  className={`w-full text-center rounded-xl py-3 text-sm font-semibold transition-colors disabled:opacity-60 ${
+                    booking.isAvailable
+                      ? 'bg-indigo-600 text-white hover:bg-indigo-700'
+                      : 'bg-amber-500 text-white hover:bg-amber-600'
+                  }`}
+                >
+                  {bookingInProgress
+                    ? 'Booker…'
+                    : booking.isAvailable
+                    ? 'Book plads'
+                    : 'Tilmeld venteliste'}
+                </button>
+              );
+            })()}
           </div>
         ) : (
           <p className="text-sm text-center text-gray-400 mt-1">
