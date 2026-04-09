@@ -43,7 +43,7 @@ export default function BookingCard({ booking }: Props) {
 
         {/* Bar + spots — col2 row1 on mobile; second-from-right on desktop */}
         {booking.bookingType === 'interval' && (
-          <div className="flex items-center gap-2 sm:order-3 sm:w-40 sm:shrink-0 self-center">
+          <div className="flex items-center gap-2 sm:order-3 sm:w-24 sm:shrink-0 self-center">
             <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
