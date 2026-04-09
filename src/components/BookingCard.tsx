@@ -41,7 +41,34 @@ export default function BookingCard({ booking }: Props) {
           {timeRange}
         </p>
 
-        {/* Badge — col2 row1 on mobile; rightmost on desktop */}
+        {/* Bar + spots — col2 row1 on mobile; second-from-right on desktop */}
+        {booking.bookingType === 'interval' && (
+          <div className="flex items-center gap-2 sm:order-3 sm:w-40 sm:shrink-0 self-center">
+            <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
+              <div
+                className={`h-full rounded-full transition-all ${
+                  booking.isAvailable ? 'bg-emerald-400' : 'bg-red-400'
+                }`}
+                style={{ width: `${fillPct}%` }}
+              />
+            </div>
+            <span className="text-xs text-gray-400 shrink-0">{spotsLabel}</span>
+          </div>
+        )}
+
+        {/* Description — col1 row2 on mobile; grows on desktop */}
+        <div className="sm:order-2 sm:flex-1 min-w-0 self-center">
+          <p className="text-sm font-semibold text-gray-900 leading-snug truncate">
+            {booking.title}
+          </p>
+          {booking.info && (
+            <p className="text-xs text-gray-500 leading-relaxed line-clamp-1 mt-0.5">
+              {booking.info}
+            </p>
+          )}
+        </div>
+
+        {/* Badge — col2 row2 on mobile; rightmost on desktop */}
         {booking.bookingType === 'interval' && (
           <div className="flex items-center justify-end sm:order-last sm:shrink-0">
             <span
@@ -53,33 +80,6 @@ export default function BookingCard({ booking }: Props) {
             >
               {booking.isAvailable ? 'Ledig' : 'Optaget'}
             </span>
-          </div>
-        )}
-
-        {/* Description — col1 row2 on mobile; grows on desktop */}
-        <div className="sm:flex-1 min-w-0 self-center">
-          <p className="text-sm font-semibold text-gray-900 leading-snug truncate">
-            {booking.title}
-          </p>
-          {booking.info && (
-            <p className="text-xs text-gray-500 leading-relaxed line-clamp-1 mt-0.5">
-              {booking.info}
-            </p>
-          )}
-        </div>
-
-        {/* Bar + spots — col2 row2 on mobile; second-from-right on desktop */}
-        {booking.bookingType === 'interval' && (
-          <div className="flex items-center gap-2 sm:w-40 sm:shrink-0 self-center">
-            <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
-              <div
-                className={`h-full rounded-full transition-all ${
-                  booking.isAvailable ? 'bg-emerald-400' : 'bg-red-400'
-                }`}
-                style={{ width: `${fillPct}%` }}
-              />
-            </div>
-            <span className="text-xs text-gray-400 shrink-0">{spotsLabel}</span>
           </div>
         )}
       </div>
