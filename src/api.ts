@@ -1,4 +1,4 @@
-import { type Booking, type DisplayBooking, type ResourceBookings } from './types';
+import { type Booking, type DisplayBooking, type ResourceBookings, type BookingDetailResponse } from './types';
 
 const API_BASE = 'https://www.conventus.dk';
 const ORGANIZATION_ID = 17742;
@@ -10,7 +10,9 @@ function toDisplayBooking(booking: Booking): DisplayBooking {
   const bookedCount = interval?.numberOfBookings ?? 0;
   const availableSpots = Math.max(0, totalSpots - bookedCount);
   const isAvailable = availableSpots > 0;
-  const hasWaitingList = interval?.waitingList === true;
+  const hasWaitingList = Array.isArray(interval?.waitingList)
+    ? interval.waitingList.length > 0
+    : false;
 
   return { ...booking, availableSpots, totalSpots, isAvailable, hasWaitingList };
 }
@@ -58,4 +60,16 @@ export async function fetchBookings(
   allBookings.sort((a, b) => a.start - b.start);
 
   return allBookings;
+}
+
+export async function fetchBookingDetail(id: number | string): Promise<BookingDetailResponse> {
+  const response = await fetch(
+    `${API_BASE}/publicBooking/public/intervalbooking/${id}`
+  );
+
+  if (!response.ok) {
+    throw new Error(`API error: ${response.status}`);
+  }
+
+  return response.json();
 }

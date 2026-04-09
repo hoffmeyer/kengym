@@ -12,13 +12,13 @@ export interface BookingInInterval {
   attendance: boolean;
 }
 
-export interface Interval {
+export interface IntervalDetail {
   id: number;
   maxParticipants: number;
   start: number;
   end: number;
   bookings: BookingInInterval[] | null;
-  waitingList: boolean | null;
+  waitingList: BookingInInterval[] | null;
   numberOfBookings: number;
   numberOfWaitingListEntries: number;
   memberBooked: boolean;
@@ -27,6 +27,9 @@ export interface Interval {
   waitingListPosition: number | null;
   bookingInIntervalId: number | null;
 }
+
+// Alias used in list context (waitingList is boolean there)
+export type Interval = IntervalDetail;
 
 export interface OrganizationalUnit {
   department: number;
@@ -80,3 +83,20 @@ export interface DisplayBooking extends Booking {
   isAvailable: boolean;
   hasWaitingList: boolean;
 }
+
+// Response from /publicBooking/public/intervalbooking/:id
+export interface BookingDetailSettings {
+  combinedSettings: {
+    showPersonsName: boolean;
+    showWaitingListPublic: boolean;
+    showCommentPublic: boolean;
+    allowCancellation: boolean;
+    showWaitingList: boolean;
+  };
+}
+
+export interface BookingDetailResponse {
+  booking: Booking & { intervals: IntervalDetail[] };
+  settings: BookingDetailSettings;
+}
+

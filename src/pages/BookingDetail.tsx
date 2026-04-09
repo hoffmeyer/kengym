@@ -3,8 +3,8 @@ import { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { addDays } from 'date-fns';
-import { fetchBookings } from '../api';
-import type { DisplayBooking } from '../types';
+import { fetchBookings, fetchBookingDetail } from '../api';
+import type { DisplayBooking, BookingDetailResponse } from '../types';
 
 const BOOK_BASE = 'https://www.conventus.dk/dataudv/www/booking_v2_interval.php';
 const FORENING_ID = 17742;
@@ -17,10 +17,12 @@ export default function BookingDetail() {
   const [booking, setBooking] = useState<DisplayBooking | null>(
     state as DisplayBooking | null
   );
+  const [detail, setDetail] = useState<BookingDetailResponse | null>(null);
   const [loading, setLoading] = useState(!state);
+  const [detailLoading, setDetailLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fallback: fetch all bookings if we arrived via direct URL (no state)
+  // Fallback: fetch list if we arrived via direct URL (no router state)
   useEffect(() => {
     if (state) return;
 
@@ -37,6 +39,16 @@ export default function BookingDetail() {
       .catch((err: Error) => setError(err.message))
       .finally(() => setLoading(false));
   }, [id, state]);
+
+  // Fetch detailed data (participants) for this booking
+  useEffect(() => {
+    if (!id) return;
+
+    fetchBookingDetail(id)
+      .then(setDetail)
+      .catch(() => {/* silently ignore — participant list just won't show */})
+      .finally(() => setDetailLoading(false));
+  }, [id]);
 
   if (loading) {
     return (
@@ -67,8 +79,6 @@ export default function BookingDetail() {
 
   const startDate = new Date(booking.start);
   const endDate = new Date(booking.end);
-  const interval = booking.intervals?.[0];
-  const waitingCount = interval?.numberOfWaitingListEntries ?? 0;
   const bookUrl = `${BOOK_BASE}?forening=${FORENING_ID}&booking=${booking.id}`;
 
   const filledPct =
@@ -77,6 +87,14 @@ export default function BookingDetail() {
           ((booking.totalSpots - booking.availableSpots) / booking.totalSpots) * 100
         )
       : 100;
+
+  // Participant data from detail API
+  const detailInterval = detail?.booking?.intervals?.[0];
+  const showNames = detail?.settings?.combinedSettings?.showPersonsName ?? false;
+  const showWaitingPublic = detail?.settings?.combinedSettings?.showWaitingListPublic ?? false;
+  const participants = showNames ? (detailInterval?.bookings ?? []) : [];
+  const waitingList = showWaitingPublic ? (detailInterval?.waitingList ?? []) : [];
+  const waitingCount = detailInterval?.numberOfWaitingListEntries ?? 0;
 
   return (
     <main className="max-w-2xl mx-auto px-4 pt-4 pb-10">
@@ -116,7 +134,7 @@ export default function BookingDetail() {
           </p>
         </div>
 
-        {/* Spots */}
+        {/* Spots fill bar */}
         <div className="flex flex-col gap-2">
           <div className="flex items-center justify-between text-sm">
             <span className="text-gray-600 font-medium">Pladser</span>
@@ -132,32 +150,7 @@ export default function BookingDetail() {
               style={{ width: `${filledPct}%` }}
             />
           </div>
-          {!booking.isAvailable && waitingCount > 0 && (
-            <p className="text-xs text-amber-600 font-medium">
-              {waitingCount} {waitingCount === 1 ? 'person' : 'personer'} på venteliste
-            </p>
-          )}
         </div>
-
-        {/* Meta details */}
-        <dl className="grid grid-cols-[auto_1fr] gap-x-4 gap-y-2 text-sm border-t border-gray-50 pt-4">
-          <dt className="text-gray-400 font-medium">Lokale</dt>
-          <dd className="text-gray-700">{booking.resource.name}</dd>
-
-          {booking.organizationalUnit?.name && (
-            <>
-              <dt className="text-gray-400 font-medium">Afdeling</dt>
-              <dd className="text-gray-700">{booking.organizationalUnit.name}</dd>
-            </>
-          )}
-
-          {booking.bookingGroups?.length > 0 && (
-            <>
-              <dt className="text-gray-400 font-medium">Gruppe</dt>
-              <dd className="text-gray-700">{booking.bookingGroups[0].name}</dd>
-            </>
-          )}
-        </dl>
 
         {/* Optional description */}
         {booking.info && (
@@ -168,6 +161,44 @@ export default function BookingDetail() {
             <p className="text-sm text-gray-600 leading-relaxed whitespace-pre-line">
               {booking.info}
             </p>
+          </div>
+        )}
+
+        {/* Participants */}
+        {!detailLoading && showNames && (
+          <div className="border-t border-gray-50 pt-4 flex flex-col gap-3">
+            <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider">
+              Tilmeldte ({detailInterval?.numberOfBookings ?? 0})
+            </p>
+            {participants.length > 0 ? (
+              <ul className="flex flex-col gap-1">
+                {participants.map((p, i) => (
+                  <li key={p.id} className="flex items-center gap-3 text-sm text-gray-700">
+                    <span className="w-5 text-right text-gray-300 text-xs shrink-0">{i + 1}</span>
+                    {p.bookedTo?.name ?? '–'}
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="text-sm text-gray-400">Ingen tilmeldte</p>
+            )}
+
+            {/* Waiting list */}
+            {showWaitingPublic && waitingCount > 0 && (
+              <>
+                <p className="text-xs font-semibold text-gray-400 uppercase tracking-wider mt-1">
+                  Venteliste ({waitingCount})
+                </p>
+                <ul className="flex flex-col gap-1">
+                  {waitingList.map((p, i) => (
+                    <li key={p.id} className="flex items-center gap-3 text-sm text-amber-700">
+                      <span className="w-5 text-right text-gray-300 text-xs shrink-0">{i + 1}</span>
+                      {p.bookedTo?.name ?? '–'}
+                    </li>
+                  ))}
+                </ul>
+              </>
+            )}
           </div>
         )}
 
