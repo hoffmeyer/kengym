@@ -34,28 +34,16 @@ export default function BookingCard({ booking }: Props) {
         sm+: single flex row
           [time] [description …flex-1] [bar+spots] [badge+btn]
       */}
-      <div className="grid grid-cols-[auto_1fr] grid-rows-2 gap-x-3 gap-y-2 sm:flex sm:flex-row sm:items-center sm:gap-4">
+      <div className="grid grid-cols-[1fr_auto] grid-rows-2 gap-x-3 gap-y-2 sm:flex sm:flex-row sm:items-center sm:gap-4">
 
         {/* Time — col1 row1 on mobile; leftmost on desktop */}
         <p className="text-sm font-semibold text-indigo-600 whitespace-nowrap self-center">
           {timeRange}
         </p>
 
-        {/* Description — col2 row1 on mobile; grows on desktop */}
-        <div className="sm:flex-1 min-w-0 self-center">
-          <p className="text-sm font-semibold text-gray-900 leading-snug truncate">
-            {booking.title}
-          </p>
-          {booking.info && (
-            <p className="text-xs text-gray-500 leading-relaxed line-clamp-1 mt-0.5">
-              {booking.info}
-            </p>
-          )}
-        </div>
-
-        {/* Badge + button — col1 row2 on mobile; rightmost on desktop */}
+        {/* Badge — col2 row1 on mobile; rightmost on desktop */}
         {booking.bookingType === 'interval' && (
-          <div className="flex items-center gap-2 sm:order-last sm:shrink-0">
+          <div className="flex items-center justify-end sm:order-last sm:shrink-0">
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
                 booking.isAvailable
@@ -67,6 +55,18 @@ export default function BookingCard({ booking }: Props) {
             </span>
           </div>
         )}
+
+        {/* Description — col1 row2 on mobile; grows on desktop */}
+        <div className="sm:flex-1 min-w-0 self-center">
+          <p className="text-sm font-semibold text-gray-900 leading-snug truncate">
+            {booking.title}
+          </p>
+          {booking.info && (
+            <p className="text-xs text-gray-500 leading-relaxed line-clamp-1 mt-0.5">
+              {booking.info}
+            </p>
+          )}
+        </div>
 
         {/* Bar + spots — col2 row2 on mobile; second-from-right on desktop */}
         {booking.bookingType === 'interval' && (
