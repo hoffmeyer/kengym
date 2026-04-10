@@ -6,9 +6,13 @@ interface Props {
   onClose: () => void;
 }
 
+type LoginMethod = 'email' | 'phone';
+
 export default function LoginModal({ onClose }: Props) {
   const { login, selectProfile } = useAuth();
+  const [method, setMethod] = useState<LoginMethod>('email');
   const [email, setEmail] = useState('');
+  const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -19,7 +23,11 @@ export default function LoginModal({ onClose }: Props) {
     setError('');
     setLoading(true);
     try {
-      const result = await login(email, password);
+      const credential =
+        method === 'email'
+          ? { type: 'email' as const, email }
+          : { type: 'phone' as const, phoneNumber: phone };
+      const result = await login(credential, password);
       if (result.length === 1) {
         selectProfile(result[0]);
         onClose();
@@ -36,6 +44,11 @@ export default function LoginModal({ onClose }: Props) {
   function handleSelectProfile(profile: AuthProfile) {
     selectProfile(profile);
     onClose();
+  }
+
+  function handleMethodChange(next: LoginMethod) {
+    setMethod(next);
+    setError('');
   }
 
   return (
@@ -88,20 +101,63 @@ export default function LoginModal({ onClose }: Props) {
           </div>
         ) : (
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
-            <div className="flex flex-col gap-1">
-              <label className="text-sm font-medium text-gray-700" htmlFor="email">
+            {/* Email / phone toggle */}
+            <div className="flex rounded-lg border border-gray-200 overflow-hidden text-sm font-medium">
+              <button
+                type="button"
+                onClick={() => handleMethodChange('email')}
+                className={`flex-1 py-2 transition-colors ${
+                  method === 'email'
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
                 E-mail
-              </label>
-              <input
-                id="email"
-                type="email"
-                autoComplete="email"
-                required
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
-              />
+              </button>
+              <button
+                type="button"
+                onClick={() => handleMethodChange('phone')}
+                className={`flex-1 py-2 transition-colors ${
+                  method === 'phone'
+                    ? 'bg-indigo-600 text-white'
+                    : 'text-gray-600 hover:bg-gray-50'
+                }`}
+              >
+                Telefonnummer
+              </button>
             </div>
+
+            {method === 'email' ? (
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-gray-700" htmlFor="email">
+                  E-mail
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  autoComplete="email"
+                  required
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                />
+              </div>
+            ) : (
+              <div className="flex flex-col gap-1">
+                <label className="text-sm font-medium text-gray-700" htmlFor="phone">
+                  Telefonnummer
+                </label>
+                <input
+                  id="phone"
+                  type="tel"
+                  autoComplete="tel"
+                  required
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  className="rounded-lg border border-gray-200 px-3 py-2 text-sm outline-none focus:border-indigo-400 focus:ring-2 focus:ring-indigo-100"
+                />
+              </div>
+            )}
 
             <div className="flex flex-col gap-1">
               <label className="text-sm font-medium text-gray-700" htmlFor="password">

@@ -96,16 +96,16 @@ export async function fetchBookingDetail(
 }
 
 export async function login(
-  email: string,
+  credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string },
   password: string,
 ): Promise<AuthProfile[]> {
   const response = await fetch(`${API_BASE}/heimdall/rest/auth/member`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      country: null,
-      phoneNumber: null,
-      email,
+      country: credential.type === 'phone' ? 61 : null,
+      phoneNumber: credential.type === 'phone' ? credential.phoneNumber : null,
+      email: credential.type === 'email' ? credential.email : null,
       password,
       passwordHashed: false,
       organization: ORGANIZATION_ID,
@@ -113,7 +113,7 @@ export async function login(
   });
 
   if (!response.ok) {
-    throw new Error("Forkert e-mail eller adgangskode");
+    throw new Error("Forkert adgangskode eller oplysninger");
   }
 
   const data = await response.json();

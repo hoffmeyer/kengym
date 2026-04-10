@@ -32,7 +32,7 @@ function clearSession() {
 
 interface AuthContextValue {
   user: SessionUser | null;
-  login: (email: string, password: string) => Promise<AuthProfile[]>;
+  login: (credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string }, password: string) => Promise<AuthProfile[]>;
   selectProfile: (profile: AuthProfile) => void;
   logout: () => void;
 }
@@ -42,8 +42,11 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(readSession);
 
-  async function login(email: string, password: string): Promise<AuthProfile[]> {
-    return apiLogin(email, password);
+  async function login(
+    credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string },
+    password: string,
+  ): Promise<AuthProfile[]> {
+    return apiLogin(credential, password);
   }
 
   function selectProfile(profile: AuthProfile) {
