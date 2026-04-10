@@ -1,6 +1,6 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
 import { login as apiLogin } from '../api';
-import type { SessionUser } from '../types';
+import type { AuthProfile, SessionUser } from '../types';
 
 const STORAGE_KEYS = {
   memberId: 'kengym_memberId',
@@ -32,7 +32,8 @@ function clearSession() {
 
 interface AuthContextValue {
   user: SessionUser | null;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<AuthProfile[]>;
+  selectProfile: (profile: AuthProfile) => void;
   logout: () => void;
 }
 
@@ -41,15 +42,18 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(readSession);
 
-  async function login(email: string, password: string) {
-    const profile = await apiLogin(email, password);
-    const user: SessionUser = {
+  async function login(email: string, password: string): Promise<AuthProfile[]> {
+    return apiLogin(email, password);
+  }
+
+  function selectProfile(profile: AuthProfile) {
+    const sessionUser: SessionUser = {
       memberId: profile.memberId,
       name: profile.name,
       token: profile.token,
     };
-    writeSession(user);
-    setUser(user);
+    writeSession(sessionUser);
+    setUser(sessionUser);
   }
 
   function logout() {
@@ -58,7 +62,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, selectProfile, logout }}>
       {children}
     </AuthContext.Provider>
   );

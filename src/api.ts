@@ -98,7 +98,7 @@ export async function fetchBookingDetail(
 export async function login(
   email: string,
   password: string,
-): Promise<AuthProfile> {
+): Promise<AuthProfile[]> {
   const response = await fetch(`${API_BASE}/heimdall/rest/auth/member`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -123,12 +123,14 @@ export async function login(
     throw new Error("Ingen profiler fundet");
   }
 
-  return profiles[0];
+  return profiles;
 }
 
 export async function fetchMemberBookings(
   token: string,
-): Promise<Map<number, { bookingInIntervalId: number; onWaitingList: boolean }>> {
+): Promise<
+  Map<number, { bookingInIntervalId: number; onWaitingList: boolean }>
+> {
   const response = await fetch(
     `${API_BASE}/publicBooking/online/listMemberBookings?_=${Date.now()}`,
     { headers: { Authorization: token } },
@@ -137,7 +139,10 @@ export async function fetchMemberBookings(
   if (!response.ok) return new Map();
 
   const data: Booking[] = await response.json();
-  const map = new Map<number, { bookingInIntervalId: number; onWaitingList: boolean }>();
+  const map = new Map<
+    number,
+    { bookingInIntervalId: number; onWaitingList: boolean }
+  >();
 
   for (const booking of data) {
     const interval = booking.intervals?.[0];
@@ -145,12 +150,20 @@ export async function fetchMemberBookings(
 
     const bookedEntry = interval.bookings?.[0];
     if (bookedEntry) {
-      map.set(booking.id, { bookingInIntervalId: bookedEntry.id, onWaitingList: false });
+      map.set(booking.id, {
+        bookingInIntervalId: bookedEntry.id,
+        onWaitingList: false,
+      });
       continue;
     }
-    const waitingEntry = (interval.waitingList as BookingInInterval[] | null)?.[0];
+    const waitingEntry = (
+      interval.waitingList as BookingInInterval[] | null
+    )?.[0];
     if (waitingEntry) {
-      map.set(booking.id, { bookingInIntervalId: waitingEntry.id, onWaitingList: true });
+      map.set(booking.id, {
+        bookingInIntervalId: waitingEntry.id,
+        onWaitingList: true,
+      });
     }
   }
 
