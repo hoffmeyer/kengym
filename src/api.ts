@@ -31,6 +31,7 @@ function toDisplayBooking(booking: Booking): DisplayBooking {
     isBookedByUser: false,
     userBookingInIntervalId: null,
     userOnWaitingList: false,
+    userWaitingListPosition: null,
   };
 }
 
@@ -129,7 +130,7 @@ export async function login(
 export async function fetchMemberBookings(
   token: string,
 ): Promise<
-  Map<number, { bookingInIntervalId: number; onWaitingList: boolean }>
+  Map<number, { bookingInIntervalId: number; onWaitingList: boolean; waitingListPosition: number | null }>
 > {
   const response = await fetch(
     `${API_BASE}/publicBooking/online/listMemberBookings?_=${Date.now()}`,
@@ -141,7 +142,7 @@ export async function fetchMemberBookings(
   const data: Booking[] = await response.json();
   const map = new Map<
     number,
-    { bookingInIntervalId: number; onWaitingList: boolean }
+    { bookingInIntervalId: number; onWaitingList: boolean; waitingListPosition: number | null }
   >();
 
   for (const booking of data) {
@@ -153,6 +154,7 @@ export async function fetchMemberBookings(
       map.set(booking.id, {
         bookingInIntervalId: bookedEntry.id,
         onWaitingList: false,
+        waitingListPosition: null,
       });
       continue;
     }
@@ -163,6 +165,9 @@ export async function fetchMemberBookings(
       map.set(booking.id, {
         bookingInIntervalId: waitingEntry.id,
         onWaitingList: true,
+        waitingListPosition: waitingEntry.position != null
+          ? waitingEntry.position / 10 // The API stores positions as multiples of 10
+          : null,
       });
     }
   }

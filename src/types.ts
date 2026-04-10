@@ -109,6 +109,7 @@ export interface DisplayBooking extends Booking {
   isBookedByUser: boolean;
   userBookingInIntervalId: number | null;
   userOnWaitingList: boolean;
+  userWaitingListPosition: number | null;
 }
 
 // Response from /publicBooking/public/intervalbooking/:id

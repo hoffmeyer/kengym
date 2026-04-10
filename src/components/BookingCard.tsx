@@ -85,7 +85,9 @@ export default function BookingCard({ booking }: Props) {
               }`}
             >
               {booking.isBookedByUser
-                ? booking.userOnWaitingList ? 'Venteliste' : 'Tilmeldt'
+                ? booking.userOnWaitingList
+                  ? `Venteliste ${booking.userWaitingListPosition != null ? booking.userWaitingListPosition : ''}`.trim()
+                  : 'Tilmeldt'
                 : booking.isAvailable ? 'Ledig' : 'Optaget'}
             </span>
           </div>

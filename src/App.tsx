@@ -25,7 +25,7 @@ function ListPage() {
     const allBookingsPromise = fetchBookings(today, fourWeeksLater);
     const memberBookingsPromise = user
       ? fetchMemberBookings(user.token)
-      : Promise.resolve(new Map<number, { bookingInIntervalId: number; onWaitingList: boolean }>());
+      : Promise.resolve(new Map<number, { bookingInIntervalId: number; onWaitingList: boolean; waitingListPosition: number | null }>());
 
     Promise.all([allBookingsPromise, memberBookingsPromise])
       .then(([all, memberMap]) => {
@@ -37,6 +37,7 @@ function ListPage() {
             isBookedByUser: true,
             userBookingInIntervalId: entry.bookingInIntervalId,
             userOnWaitingList: entry.onWaitingList,
+            userWaitingListPosition: entry.waitingListPosition,
           };
         });
         setBookings(enriched);
