@@ -1,5 +1,9 @@
 # Copilot Instructions
 
+## Git workflow
+
+**Only commit and push when explicitly instructed by the user.** Do not create commits or push to origin as part of implementing a feature or fix — wait for a separate instruction to do so.
+
 ## Commands
 
 ```bash
