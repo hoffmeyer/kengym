@@ -6,6 +6,7 @@ import { addDays } from 'date-fns';
 import { fetchBookings, fetchBookingDetail, bookSession, cancelBooking } from '../api';
 import { useAuth } from '../context/AuthContext';
 import type { DisplayBooking, BookingDetailResponse } from '../types';
+import LoginModal from '../components/LoginModal';
 
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
@@ -22,6 +23,7 @@ export default function BookingDetail() {
   const [error, setError] = useState<string | null>(null);
   const [bookingInProgress, setBookingInProgress] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
+  const [showLogin, setShowLogin] = useState(false);
 
   const loadDetail = useCallback(() => {
     if (!id) return;
@@ -143,6 +145,7 @@ export default function BookingDetail() {
   const isBooked = !!userEntry;
 
   return (
+    <>
     <main className="max-w-2xl mx-auto px-4 pt-4 pb-10">
       {/* Back button */}
       <button
@@ -284,10 +287,19 @@ export default function BookingDetail() {
           </div>
         ) : (
           <p className="text-sm text-center text-gray-400 mt-1">
-            <span className="text-indigo-600 font-medium">Log ind</span> for at booke en plads
+            <button
+              onClick={() => setShowLogin(true)}
+              className="text-indigo-600 font-medium hover:text-indigo-800 transition-colors"
+            >
+              Log ind
+            </button>{' '}
+            for at booke en plads
           </p>
         )}
       </div>
     </main>
+
+    {showLogin && <LoginModal onClose={() => setShowLogin(false)} />}
+    </>
   );
 }
