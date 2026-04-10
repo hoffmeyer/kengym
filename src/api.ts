@@ -185,8 +185,13 @@ export async function bookSession(
   const namesOfParticipants = (detailInterval.bookings ?? [])
     .map((b) => b.bookedTo?.name)
     .filter((n): n is string => !!n);
-  const waitingListIsActive =
-    (detailInterval.numberOfWaitingListEntries ?? 0) > 0;
+
+  const isWaitingList =
+    detailInterval.numberOfBookings >= detailInterval.maxParticipants;
+
+  const endpoint = isWaitingList
+    ? `${API_BASE}/publicBooking/online/bookWaitingList`
+    : `${API_BASE}/publicBooking/online/book`;
 
   const payload = {
     bookingTime: {
@@ -201,7 +206,7 @@ export async function bookSession(
         maxParticipants: detailInterval.maxParticipants,
         numberOfParticipants: detailInterval.numberOfBookings,
         namesOfParticipants,
-        waitingList: waitingListIsActive,
+        waitingList: isWaitingList,
         membersOnwaitingList: detailInterval.numberOfWaitingListEntries ?? 0,
         namesOfMembersOnWaitingList: null,
         onlineSettings: detailInterval.onlineSettings ?? null,
@@ -219,7 +224,7 @@ export async function bookSession(
     sendEmailReceipt: false,
   };
 
-  const response = await fetch(`${API_BASE}/publicBooking/online/book`, {
+  const response = await fetch(endpoint, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
