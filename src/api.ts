@@ -1,5 +1,6 @@
 import {
   type Booking,
+  type BookingInInterval,
   type DisplayBooking,
   type ResourceBookings,
   type BookingDetailResponse,
@@ -27,6 +28,9 @@ function toDisplayBooking(booking: Booking): DisplayBooking {
     totalSpots,
     isAvailable,
     hasWaitingList,
+    isBookedByUser: false,
+    userBookingInIntervalId: null,
+    userOnWaitingList: false,
   };
 }
 
@@ -120,6 +124,37 @@ export async function login(
   }
 
   return profiles[0];
+}
+
+export async function fetchMemberBookings(
+  token: string,
+): Promise<Map<number, { bookingInIntervalId: number; onWaitingList: boolean }>> {
+  const response = await fetch(
+    `${API_BASE}/publicBooking/online/listMemberBookings?_=${Date.now()}`,
+    { headers: { Authorization: token } },
+  );
+
+  if (!response.ok) return new Map();
+
+  const data: Booking[] = await response.json();
+  const map = new Map<number, { bookingInIntervalId: number; onWaitingList: boolean }>();
+
+  for (const booking of data) {
+    const interval = booking.intervals?.[0];
+    if (!interval) continue;
+
+    const bookedEntry = interval.bookings?.[0];
+    if (bookedEntry) {
+      map.set(booking.id, { bookingInIntervalId: bookedEntry.id, onWaitingList: false });
+      continue;
+    }
+    const waitingEntry = (interval.waitingList as BookingInInterval[] | null)?.[0];
+    if (waitingEntry) {
+      map.set(booking.id, { bookingInIntervalId: waitingEntry.id, onWaitingList: true });
+    }
+  }
+
+  return map;
 }
 
 export async function bookSession(

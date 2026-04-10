@@ -106,6 +106,9 @@ export interface DisplayBooking extends Booking {
   totalSpots: number;
   isAvailable: boolean;
   hasWaitingList: boolean;
+  isBookedByUser: boolean;
+  userBookingInIntervalId: number | null;
+  userOnWaitingList: boolean;
 }
 
 // Response from /publicBooking/public/intervalbooking/:id

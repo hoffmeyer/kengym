@@ -24,7 +24,11 @@ export default function BookingCard({ booking }: Props) {
     <Link
       to={`/booking/${booking.id}`}
       state={booking}
-      className="block bg-white rounded-2xl shadow-sm border border-gray-100 p-4 hover:border-indigo-200 hover:shadow-md transition-all"
+      className={`block bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
+        booking.isBookedByUser
+          ? 'border-indigo-300 hover:border-indigo-400'
+          : 'border-gray-100 hover:border-indigo-200'
+      }`}
     >
       {/*
         Mobile: 2×2 grid
@@ -73,12 +77,16 @@ export default function BookingCard({ booking }: Props) {
           <div className="flex items-center justify-end sm:order-last sm:shrink-0">
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-                booking.isAvailable
+                booking.isBookedByUser
+                  ? 'bg-indigo-100 text-indigo-700'
+                  : booking.isAvailable
                   ? 'bg-emerald-100 text-emerald-700'
                   : 'bg-red-100 text-red-700'
               }`}
             >
-              {booking.isAvailable ? 'Ledig' : 'Optaget'}
+              {booking.isBookedByUser
+                ? booking.userOnWaitingList ? 'Venteliste' : 'Tilmeldt'
+                : booking.isAvailable ? 'Ledig' : 'Optaget'}
             </span>
           </div>
         )}
