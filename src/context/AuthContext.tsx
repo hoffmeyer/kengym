@@ -6,6 +6,7 @@ const STORAGE_KEYS = {
   memberId: 'kengym_memberId',
   name: 'kengym_name',
   token: 'kengym_token',
+  profiles: 'kengym_profiles',
 } as const;
 
 function readSession(): SessionUser | null {
@@ -24,16 +25,33 @@ function writeSession(user: SessionUser) {
   sessionStorage.setItem(STORAGE_KEYS.token, user.token);
 }
 
+function readProfiles(): AuthProfile[] {
+  try {
+    const raw = sessionStorage.getItem(STORAGE_KEYS.profiles);
+    if (raw) return JSON.parse(raw) as AuthProfile[];
+  } catch {
+    /* ignore */
+  }
+  return [];
+}
+
+function writeProfiles(profiles: AuthProfile[]) {
+  sessionStorage.setItem(STORAGE_KEYS.profiles, JSON.stringify(profiles));
+}
+
 function clearSession() {
   sessionStorage.removeItem(STORAGE_KEYS.memberId);
   sessionStorage.removeItem(STORAGE_KEYS.name);
   sessionStorage.removeItem(STORAGE_KEYS.token);
+  sessionStorage.removeItem(STORAGE_KEYS.profiles);
 }
 
 interface AuthContextValue {
   user: SessionUser | null;
+  profiles: AuthProfile[];
   login: (credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string }, password: string) => Promise<AuthProfile[]>;
-  selectProfile: (profile: AuthProfile) => void;
+  selectProfile: (profile: AuthProfile, allProfiles: AuthProfile[]) => void;
+  switchProfile: (profile: AuthProfile) => void;
   logout: () => void;
 }
 
@@ -41,6 +59,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(readSession);
+  const [profiles, setProfiles] = useState<AuthProfile[]>(readProfiles);
 
   async function login(
     credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string },
@@ -49,7 +68,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return apiLogin(credential, password);
   }
 
-  function selectProfile(profile: AuthProfile) {
+  function selectProfile(profile: AuthProfile, allProfiles: AuthProfile[]) {
+    const sessionUser: SessionUser = {
+      memberId: profile.memberId,
+      name: profile.name,
+      token: profile.token,
+    };
+    writeSession(sessionUser);
+    writeProfiles(allProfiles);
+    setUser(sessionUser);
+    setProfiles(allProfiles);
+  }
+
+  function switchProfile(profile: AuthProfile) {
     const sessionUser: SessionUser = {
       memberId: profile.memberId,
       name: profile.name,
@@ -62,10 +93,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   function logout() {
     clearSession();
     setUser(null);
+    setProfiles([]);
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, selectProfile, logout }}>
+    <AuthContext.Provider value={{ user, profiles, login, selectProfile, switchProfile, logout }}>
       {children}
     </AuthContext.Provider>
   );

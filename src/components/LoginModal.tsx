@@ -36,7 +36,7 @@ export default function LoginModal({ onClose }: Props) {
           : { type: 'phone' as const, phoneNumber: phone };
       const result = await login(credential, password);
       if (result.length === 1) {
-        selectProfile(result[0]);
+        selectProfile(result[0], result);
         onClose();
       } else {
         setProfiles(result);
@@ -49,7 +49,7 @@ export default function LoginModal({ onClose }: Props) {
   }
 
   function handleSelectProfile(profile: AuthProfile) {
-    selectProfile(profile);
+    selectProfile(profile, profiles!);
     onClose();
   }
 
