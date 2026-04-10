@@ -8,9 +8,16 @@ interface Props {
 
 type LoginMethod = 'email' | 'phone';
 
+const LOGIN_METHOD_KEY = 'kengym_loginMethod';
+
+function readLoginMethod(): LoginMethod {
+  const stored = localStorage.getItem(LOGIN_METHOD_KEY);
+  return stored === 'phone' ? 'phone' : 'email';
+}
+
 export default function LoginModal({ onClose }: Props) {
   const { login, selectProfile } = useAuth();
-  const [method, setMethod] = useState<LoginMethod>('email');
+  const [method, setMethod] = useState<LoginMethod>(readLoginMethod);
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
@@ -48,6 +55,7 @@ export default function LoginModal({ onClose }: Props) {
 
   function handleMethodChange(next: LoginMethod) {
     setMethod(next);
+    localStorage.setItem(LOGIN_METHOD_KEY, next);
     setError('');
   }
 
