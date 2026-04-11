@@ -85,11 +85,6 @@ export default function BookingCard({ booking }: Props) {
           <p className="text-sm font-semibold text-gray-900 leading-snug truncate">
             {booking.title}
           </p>
-          {booking.info && (
-            <p className="text-xs text-gray-500 leading-relaxed line-clamp-1 mt-0.5">
-              {booking.info}
-            </p>
-          )}
         </div>
 
         {/* Badge — col2 row2 on mobile; rightmost on desktop */}
