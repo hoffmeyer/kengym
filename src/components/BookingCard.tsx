@@ -1,6 +1,6 @@
-import { format } from 'date-fns';
-import { Link } from 'react-router-dom';
-import type { DisplayBooking } from '../types';
+import { format } from "date-fns";
+import { Link } from "react-router-dom";
+import type { DisplayBooking } from "../types";
 
 interface Props {
   booking: DisplayBooking;
@@ -10,13 +10,14 @@ export default function BookingCard({ booking }: Props) {
   const startDate = new Date(booking.start);
   const endDate = new Date(booking.end);
 
-  const timeRange = `${format(startDate, 'HH:mm')} – ${format(endDate, 'HH:mm')}`;
+  const timeRange = `${format(startDate, "HH:mm")} – ${format(endDate, "HH:mm")}`;
   const spotsLabel = `${booking.availableSpots} / ${booking.totalSpots}`;
 
   const fillPct =
     booking.totalSpots > 0
       ? Math.round(
-          ((booking.totalSpots - booking.availableSpots) / booking.totalSpots) * 100
+          ((booking.totalSpots - booking.availableSpots) / booking.totalSpots) *
+            100,
         )
       : 100;
 
@@ -25,7 +26,9 @@ export default function BookingCard({ booking }: Props) {
       to={`/booking/${booking.id}`}
       state={booking}
       className={`block bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
-        booking.isBookedByUser
+        booking.isBookedByUser && booking.userOnWaitingList
+          ? 'border-amber-300 hover:border-amber-400'
+          : booking.isBookedByUser
           ? 'border-indigo-300 hover:border-indigo-400'
           : 'border-gray-100 hover:border-indigo-200'
       }`}
@@ -39,19 +42,18 @@ export default function BookingCard({ booking }: Props) {
           [time] [description …flex-1] [bar+spots] [badge+btn]
       */}
       <div className="grid grid-cols-[1fr_5rem] grid-rows-2 gap-x-3 gap-y-2 sm:flex sm:flex-row sm:items-center sm:gap-4">
-
         {/* Time — col1 row1 on mobile; leftmost on desktop */}
         <p className="text-sm font-semibold text-indigo-600 whitespace-nowrap self-center">
           {timeRange}
         </p>
 
         {/* Bar + spots — col2 row1 on mobile; second-from-right on desktop */}
-        {booking.bookingType === 'interval' && (
+        {booking.bookingType === "interval" && (
           <div className="flex items-center gap-2 sm:order-3 sm:w-24 sm:shrink-0 self-center">
             <div className="flex-1 h-1.5 rounded-full bg-gray-100 overflow-hidden">
               <div
                 className={`h-full rounded-full transition-all ${
-                  booking.isAvailable ? 'bg-emerald-400' : 'bg-red-400'
+                  booking.isAvailable ? "bg-emerald-400" : "bg-red-400"
                 }`}
                 style={{ width: `${fillPct}%` }}
               />
@@ -73,11 +75,13 @@ export default function BookingCard({ booking }: Props) {
         </div>
 
         {/* Badge — col2 row2 on mobile; rightmost on desktop */}
-        {booking.bookingType === 'interval' && (
+        {booking.bookingType === "interval" && (
           <div className="flex items-center justify-end sm:order-last sm:shrink-0">
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
-                booking.isBookedByUser
+                booking.isBookedByUser && booking.userOnWaitingList
+                  ? 'bg-amber-100 text-amber-700'
+                  : booking.isBookedByUser
                   ? 'bg-indigo-100 text-indigo-700'
                   : booking.isAvailable
                   ? 'bg-emerald-100 text-emerald-700'
@@ -86,9 +90,11 @@ export default function BookingCard({ booking }: Props) {
             >
               {booking.isBookedByUser
                 ? booking.userOnWaitingList
-                  ? `Venteliste ${booking.userWaitingListPosition != null ? booking.userWaitingListPosition : ''}`.trim()
-                  : 'Tilmeldt'
-                : booking.isAvailable ? 'Ledig' : 'Optaget'}
+                  ? `I kø (${booking.userWaitingListPosition != null ? booking.userWaitingListPosition : ""})`.trim()
+                  : "Tilmeldt"
+                : booking.isAvailable
+                  ? "Ledig"
+                  : "Optaget"}
             </span>
           </div>
         )}
