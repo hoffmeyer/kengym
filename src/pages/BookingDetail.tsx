@@ -1,5 +1,6 @@
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
 import { useEffect, useState, useCallback } from 'react';
+import { flushSync } from 'react-dom';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { addDays } from 'date-fns';
@@ -57,6 +58,36 @@ export default function BookingDetail() {
     loadDetail();
   }, [loadDetail]);
 
+  // Trigger a back view transition when the browser's own back button is used.
+  // navigate(-1) is async (fires popstate later), so we wait for React to paint.
+  useEffect(() => {
+    function handlePopState() {
+      if (!('startViewTransition' in document)) return;
+      document.documentElement.dataset.navDir = 'back';
+      const t = (document as any).startViewTransition(async () => {
+        await new Promise<void>((resolve) => setTimeout(resolve, 0));
+        await new Promise<void>((resolve) => requestAnimationFrame(() => requestAnimationFrame(() => resolve())));
+      });
+      t.finished.then(() => { delete document.documentElement.dataset.navDir; });
+    }
+    window.addEventListener('popstate', handlePopState);
+    return () => window.removeEventListener('popstate', handlePopState);
+  }, []);
+
+  // navigate('/') is a synchronous push — flushSync makes React commit inside startViewTransition
+  function navigateBack() {
+    document.documentElement.dataset.navDir = 'back';
+    if ('startViewTransition' in document) {
+      const t = (document as any).startViewTransition(() => {
+        flushSync(() => navigate('/'));
+      });
+      t.finished.then(() => { delete document.documentElement.dataset.navDir; });
+    } else {
+      navigate('/');
+      delete (document as Document).documentElement.dataset.navDir;
+    }
+  }
+
   async function handleBook() {
     if (!booking || !user) return;
     const detailInterval = detail?.booking?.intervals?.[0];
@@ -104,7 +135,7 @@ export default function BookingDetail() {
     return (
       <main className="max-w-2xl mx-auto px-4 pt-6">
         <button
-          onClick={() => navigate(-1)}
+          onClick={navigateBack}
           className="text-sm text-indigo-600 flex items-center gap-1 mb-6"
         >
           ← Tilbage
@@ -149,7 +180,7 @@ export default function BookingDetail() {
     <main className="max-w-2xl mx-auto px-4 pt-4 pb-10">
       {/* Back button */}
       <button
-        onClick={() => navigate(-1)}
+        onClick={navigateBack}
         className="text-sm text-indigo-600 flex items-center gap-1 mb-5 hover:text-indigo-800 transition-colors"
       >
         ← Tilbage

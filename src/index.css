@@ -14,17 +14,32 @@ body {
   to   { transform: translateX(0);    opacity: 1; }
 }
 
+@keyframes slide-in-from-left {
+  from { transform: translateX(-30px); opacity: 0; }
+  to   { transform: translateX(0);     opacity: 1; }
+}
+
 @keyframes fade-out {
   from { opacity: 1; }
   to   { opacity: 0; }
 }
 
+/* Forward navigation: fade out, slide in from right */
 ::view-transition-old(root) {
   animation: fade-out 200ms ease-out forwards;
 }
 
 ::view-transition-new(root) {
   animation: slide-in-from-right 250ms ease-out forwards;
+}
+
+/* Back navigation: fade out, slide in from left */
+:root[data-nav-dir="back"]::view-transition-old(root) {
+  animation: fade-out 200ms ease-out forwards;
+}
+
+:root[data-nav-dir="back"]::view-transition-new(root) {
+  animation: slide-in-from-left 250ms ease-out forwards;
 }
 
 /* Keep the header static — it doesn't change between pages */
