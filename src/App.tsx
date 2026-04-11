@@ -16,6 +16,13 @@ function ListPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>('all');
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    function onScroll() { setScrolled(window.scrollY > 200); }
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   useEffect(() => {
     const today = new Date();
@@ -51,6 +58,14 @@ function ListPage() {
 
   return (
     <main className="max-w-2xl mx-auto">
+      {scrolled && (
+        <button
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          className="fixed top-4 right-4 z-50 rounded-full bg-white border border-gray-200 shadow-md px-3 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-all"
+        >
+          ↑ Top
+        </button>
+      )}
       {/* Filter toggle */}
       {user && !loading && (
         <div className="flex gap-2 px-4 pt-4">
