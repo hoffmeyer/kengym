@@ -2,6 +2,8 @@ import { format } from "date-fns";
 import { Link } from "react-router-dom";
 import type { DisplayBooking } from "../types";
 
+const LIST_SCROLL_KEY = 'list-scroll-y';
+
 interface Props {
   booking: DisplayBooking;
 }
@@ -25,6 +27,7 @@ export default function BookingCard({ booking }: Props) {
     <Link
       to={`/booking/${booking.id}`}
       state={booking}
+      onClick={() => sessionStorage.setItem(LIST_SCROLL_KEY, String(window.scrollY))}
       className={`block bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
         booking.isBookedByUser && booking.userOnWaitingList
           ? 'border-amber-300 hover:border-amber-400'

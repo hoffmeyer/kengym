@@ -10,6 +10,8 @@ import BookingDetail from './pages/BookingDetail';
 
 type Filter = 'all' | 'mine';
 
+const LIST_SCROLL_KEY = 'list-scroll-y';
+
 function ListPage() {
   const { user } = useAuth();
   const [bookings, setBookings] = useState<DisplayBooking[]>([]);
@@ -23,6 +25,16 @@ function ListPage() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  // Restore saved scroll position after the list has finished loading
+  useEffect(() => {
+    if (loading) return;
+    const saved = sessionStorage.getItem(LIST_SCROLL_KEY);
+    if (!saved) return;
+    sessionStorage.removeItem(LIST_SCROLL_KEY);
+    const y = parseInt(saved, 10);
+    requestAnimationFrame(() => window.scrollTo(0, y));
+  }, [loading]);
 
   useEffect(() => {
     const today = new Date();
