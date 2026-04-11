@@ -8,3 +8,31 @@ body {
   margin: 0;
   background-color: #f3f4f6;
 }
+
+@keyframes slide-in-from-right {
+  from { transform: translateX(30px); opacity: 0; }
+  to   { transform: translateX(0);    opacity: 1; }
+}
+
+@keyframes fade-out {
+  from { opacity: 1; }
+  to   { opacity: 0; }
+}
+
+::view-transition-old(root) {
+  animation: fade-out 200ms ease-out forwards;
+}
+
+::view-transition-new(root) {
+  animation: slide-in-from-right 250ms ease-out forwards;
+}
+
+/* Keep the header static — it doesn't change between pages */
+header {
+  view-transition-name: site-header;
+}
+
+::view-transition-old(site-header),
+::view-transition-new(site-header) {
+  animation: none;
+}

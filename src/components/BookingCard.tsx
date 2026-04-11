@@ -1,5 +1,6 @@
 import { format } from "date-fns";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { flushSync } from "react-dom";
 import type { DisplayBooking } from "../types";
 
 const LIST_SCROLL_KEY = 'list-scroll-y';
@@ -9,6 +10,7 @@ interface Props {
 }
 
 export default function BookingCard({ booking }: Props) {
+  const navigate = useNavigate();
   const startDate = new Date(booking.start);
   const endDate = new Date(booking.end);
 
@@ -23,11 +25,24 @@ export default function BookingCard({ booking }: Props) {
         )
       : 100;
 
+  function handleClick(e: React.MouseEvent) {
+    e.preventDefault();
+    sessionStorage.setItem(LIST_SCROLL_KEY, String(window.scrollY));
+    const target = `/booking/${booking.id}`;
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        flushSync(() => navigate(target, { state: booking }));
+      });
+    } else {
+      navigate(target, { state: booking });
+    }
+  }
+
   return (
     <Link
       to={`/booking/${booking.id}`}
       state={booking}
-      onClick={() => sessionStorage.setItem(LIST_SCROLL_KEY, String(window.scrollY))}
+      onClick={handleClick}
       className={`block bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
         booking.isBookedByUser && booking.userOnWaitingList
           ? 'border-amber-300 hover:border-amber-400'
