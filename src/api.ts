@@ -96,6 +96,30 @@ export async function fetchBookingDetail(
   return response.json();
 }
 
+// --- Detail prefetch cache ---
+const detailCache = new Map<string, Promise<BookingDetailResponse>>();
+
+function cacheKey(id: number | string, token?: string) {
+  return `${id}:${token ?? ''}`;
+}
+
+export function prefetchBookingDetail(id: number | string, token?: string): void {
+  const key = cacheKey(id, token);
+  if (!detailCache.has(key)) {
+    detailCache.set(key, fetchBookingDetail(id, token));
+  }
+}
+
+export function consumeBookingDetailCache(
+  id: number | string,
+  token?: string,
+): Promise<BookingDetailResponse> | undefined {
+  const key = cacheKey(id, token);
+  const cached = detailCache.get(key);
+  detailCache.delete(key);
+  return cached;
+}
+
 export async function login(
   credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string },
   password: string,

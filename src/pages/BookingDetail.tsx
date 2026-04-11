@@ -1,10 +1,10 @@
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { flushSync } from 'react-dom';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { addDays } from 'date-fns';
-import { fetchBookings, fetchBookingDetail, bookSession, cancelBooking } from '../api';
+import { fetchBookings, fetchBookingDetail, bookSession, cancelBooking, consumeBookingDetailCache } from '../api';
 import { useAuth } from '../context/AuthContext';
 import type { DisplayBooking, BookingDetailResponse } from '../types';
 import LoginModal from '../components/LoginModal';
@@ -25,11 +25,17 @@ export default function BookingDetail() {
   const [bookingInProgress, setBookingInProgress] = useState(false);
   const [bookingError, setBookingError] = useState<string | null>(null);
   const [showLogin, setShowLogin] = useState(false);
+  const isFirstLoad = useRef(true);
 
   const loadDetail = useCallback(() => {
     if (!id) return;
     setDetailLoading(true);
-    fetchBookingDetail(id, user?.token)
+    // On first load, use the prefetched promise if available (avoids layout shift)
+    const promise = isFirstLoad.current
+      ? (consumeBookingDetailCache(id, user?.token) ?? fetchBookingDetail(id, user?.token))
+      : fetchBookingDetail(id, user?.token);
+    isFirstLoad.current = false;
+    promise
       .then(setDetail)
       .catch(() => {/* silently ignore */})
       .finally(() => setDetailLoading(false));

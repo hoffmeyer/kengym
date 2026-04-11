@@ -2,6 +2,8 @@ import { format } from "date-fns";
 import { Link, useNavigate } from "react-router-dom";
 import { flushSync } from "react-dom";
 import type { DisplayBooking } from "../types";
+import { prefetchBookingDetail } from "../api";
+import { useAuth } from "../context/AuthContext";
 
 const LIST_SCROLL_KEY = 'list-scroll-y';
 
@@ -11,6 +13,7 @@ interface Props {
 
 export default function BookingCard({ booking }: Props) {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const startDate = new Date(booking.start);
   const endDate = new Date(booking.end);
 
@@ -42,6 +45,7 @@ export default function BookingCard({ booking }: Props) {
     <Link
       to={`/booking/${booking.id}`}
       state={booking}
+      onPointerEnter={() => prefetchBookingDetail(booking.id, user?.token)}
       onClick={handleClick}
       className={`block bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
         booking.isBookedByUser && booking.userOnWaitingList
