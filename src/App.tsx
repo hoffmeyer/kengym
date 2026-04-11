@@ -59,12 +59,16 @@ function ListPage() {
   return (
     <main className="max-w-2xl mx-auto">
       {scrolled && (
-        <button
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="fixed top-4 right-4 z-50 rounded-full bg-white border border-gray-200 shadow-md px-3 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-all"
-        >
-          ↑ Top
-        </button>
+        <div className="fixed top-4 left-0 right-0 z-50 pointer-events-none">
+          <div className="max-w-2xl mx-auto px-4 flex justify-end">
+            <button
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              className="pointer-events-auto rounded-full bg-white border border-gray-200 shadow-md px-3 py-1.5 text-sm font-medium text-indigo-600 hover:bg-indigo-50 hover:border-indigo-300 transition-all"
+            >
+              ↑ Top
+            </button>
+          </div>
+        </div>
       )}
       {/* Filter toggle */}
       {user && !loading && (
