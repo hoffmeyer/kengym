@@ -12,11 +12,19 @@ import BookingDetail from './pages/BookingDetail';
 
 type Filter = 'all' | 'mine';
 
-const LIST_SCROLL_KEY = 'list-scroll-y';
+const LIST_SCROLL_KEY = 'kengym_list_scroll_y';
+const LIST_FILTER_KEY = 'kengym_list_filter';
 
 function ListPage() {
   const { user } = useAuth();
-  const [filter, setFilter] = useState<Filter>('all');
+  const [filter, setFilter] = useState<Filter>(
+    () => (sessionStorage.getItem(LIST_FILTER_KEY) as Filter | null) ?? 'all'
+  );
+
+  function applyFilter(f: Filter) {
+    sessionStorage.setItem(LIST_FILTER_KEY, f);
+    setFilter(f);
+  }
   const [scrolled, setScrolled] = useState(false);
 
   useEffect(() => {
@@ -90,7 +98,7 @@ function ListPage() {
       {user && !loading && (
         <div className="flex gap-2 px-4 pt-4">
           <button
-            onClick={() => setFilter('all')}
+            onClick={() => applyFilter('all')}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               filter === 'all'
                 ? 'bg-indigo-600 text-white'
@@ -100,7 +108,7 @@ function ListPage() {
             Alle
           </button>
           <button
-            onClick={() => setFilter('mine')}
+            onClick={() => applyFilter('mine')}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
               filter === 'mine'
                 ? 'bg-indigo-600 text-white'

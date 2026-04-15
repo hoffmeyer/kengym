@@ -7,7 +7,7 @@ import { fetchBookingDetail } from "../api";
 import { queryKeys } from "../queryKeys";
 import { useAuth } from "../context/AuthContext";
 
-const LIST_SCROLL_KEY = 'list-scroll-y';
+const LIST_SCROLL_KEY = 'kengym_list_scroll_y';
 
 interface Props {
   booking: DisplayBooking;
