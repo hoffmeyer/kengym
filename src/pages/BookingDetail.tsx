@@ -1,11 +1,13 @@
 import { useLocation, useParams, useNavigate } from 'react-router-dom';
-import { useEffect, useState, useCallback, useRef } from 'react';
+import { useEffect, useState } from 'react';
 import { flushSync } from 'react-dom';
 import { format } from 'date-fns';
 import { da } from 'date-fns/locale';
 import { addDays } from 'date-fns';
-import { fetchBookings, fetchBookingDetail, bookSession, cancelBooking, consumeBookingDetailCache } from '../api';
+import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { fetchBookings, fetchBookingDetail, bookSession, cancelBooking } from '../api';
 import { useAuth } from '../context/AuthContext';
+import { queryKeys } from '../queryKeys';
 import type { DisplayBooking, BookingDetailResponse } from '../types';
 import LoginModal from '../components/LoginModal';
 
@@ -14,55 +16,68 @@ export default function BookingDetail() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
 
-  const [booking, setBooking] = useState<DisplayBooking | null>(
-    state as DisplayBooking | null
-  );
-  const [detail, setDetail] = useState<BookingDetailResponse | null>(null);
-  const [loading, setLoading] = useState(!state);
-  const [detailLoading, setDetailLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [bookingInProgress, setBookingInProgress] = useState(false);
-  const [bookingError, setBookingError] = useState<string | null>(null);
   const [showLogin, setShowLogin] = useState(false);
-  const isFirstLoad = useRef(true);
+  const [bookingError, setBookingError] = useState<string | null>(null);
 
-  const loadDetail = useCallback(() => {
-    if (!id) return;
-    setDetailLoading(true);
-    // On first load, use the prefetched promise if available (avoids layout shift)
-    const promise = isFirstLoad.current
-      ? (consumeBookingDetailCache(id, user?.token) ?? fetchBookingDetail(id, user?.token))
-      : fetchBookingDetail(id, user?.token);
-    isFirstLoad.current = false;
-    promise
-      .then(setDetail)
-      .catch(() => {/* silently ignore */})
-      .finally(() => setDetailLoading(false));
-  }, [id, user?.token]);
+  // If navigated directly (no router state), fall back to the list query
+  const listQuery = useQuery({
+    queryKey: queryKeys.bookings(),
+    queryFn: () => fetchBookings(new Date(), addDays(new Date(), 28)),
+    enabled: !state,
+  });
 
-  // Fallback: fetch list if we arrived via direct URL (no router state)
-  useEffect(() => {
-    if (state) return;
+  const booking: DisplayBooking | null =
+    (state as DisplayBooking | null) ??
+    listQuery.data?.find((b) => String(b.id) === id) ??
+    null;
 
-    const today = new Date();
-    fetchBookings(today, addDays(today, 28))
-      .then((bookings) => {
-        const found = bookings.find((b) => String(b.id) === id);
-        if (found) {
-          setBooking(found);
-        } else {
-          setError('Booking ikke fundet.');
-        }
-      })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [id, state]);
+  const loading = !state && listQuery.isLoading;
+  const error = !state && !booking && !listQuery.isLoading
+    ? (listQuery.error?.message ?? 'Booking ikke fundet.')
+    : null;
 
-  // Fetch detailed data (participants) for this booking
-  useEffect(() => {
-    loadDetail();
-  }, [loadDetail]);
+  const detailQuery = useQuery<BookingDetailResponse>({
+    queryKey: queryKeys.bookingDetail(id!, user?.token),
+    queryFn: () => fetchBookingDetail(id!, user?.token),
+    enabled: !!id,
+    staleTime: 30 * 1000,
+  });
+
+  const detail = detailQuery.data ?? null;
+  const detailLoading = detailQuery.isLoading;
+
+  const bookMutation = useMutation({
+    mutationFn: () => {
+      const detailInterval = detail?.booking?.intervals?.[0];
+      if (!booking || !user || !detailInterval) throw new Error('Manglende data');
+      return bookSession(booking, detailInterval, user.token);
+    },
+    onSuccess: () => {
+      setBookingError(null);
+      queryClient.invalidateQueries();
+    },
+    onError: (err) => {
+      setBookingError(err instanceof Error ? err.message : 'Booking fejlede');
+    },
+  });
+
+  const cancelMutation = useMutation({
+    mutationFn: () => {
+      if (!booking || !user || !userEntry) throw new Error('Manglende data');
+      return cancelBooking(booking.id, userEntry.id, user.token);
+    },
+    onSuccess: () => {
+      setBookingError(null);
+      queryClient.invalidateQueries();
+    },
+    onError: (err) => {
+      setBookingError(err instanceof Error ? err.message : 'Annullering fejlede');
+    },
+  });
+
+  const bookingInProgress = bookMutation.isPending || cancelMutation.isPending;
 
   // Trigger a back view transition when the browser's own back button is used.
   // navigate(-1) is async (fires popstate later), so we wait for React to paint.
@@ -95,35 +110,13 @@ export default function BookingDetail() {
   }
 
   async function handleBook() {
-    if (!booking || !user) return;
-    const detailInterval = detail?.booking?.intervals?.[0];
-    if (!detailInterval) return;
-
-    setBookingInProgress(true);
     setBookingError(null);
-    try {
-      await bookSession(booking, detailInterval, user.token);
-      loadDetail();
-    } catch (err) {
-      setBookingError(err instanceof Error ? err.message : 'Booking fejlede');
-    } finally {
-      setBookingInProgress(false);
-    }
+    bookMutation.mutate();
   }
 
   async function handleCancel() {
-    if (!booking || !user || !userEntry) return;
-
-    setBookingInProgress(true);
     setBookingError(null);
-    try {
-      await cancelBooking(booking.id, userEntry.id, user.token);
-      loadDetail();
-    } catch (err) {
-      setBookingError(err instanceof Error ? err.message : 'Annullering fejlede');
-    } finally {
-      setBookingInProgress(false);
-    }
+    cancelMutation.mutate();
   }
 
   if (loading) {

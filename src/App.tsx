@@ -1,8 +1,10 @@
 import { Routes, Route } from 'react-router-dom';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { addDays } from 'date-fns';
+import { useQuery } from '@tanstack/react-query';
 import { fetchBookings, fetchMemberBookings } from './api';
 import { useAuth } from './context/AuthContext';
+import { queryKeys } from './queryKeys';
 import type { DisplayBooking } from './types';
 import Header from './components/Header';
 import BookingList from './components/BookingList';
@@ -14,9 +16,6 @@ const LIST_SCROLL_KEY = 'list-scroll-y';
 
 function ListPage() {
   const { user } = useAuth();
-  const [bookings, setBookings] = useState<DisplayBooking[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [filter, setFilter] = useState<Filter>('all');
   const [scrolled, setScrolled] = useState(false);
 
@@ -25,6 +24,23 @@ function ListPage() {
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
+
+  const today = useMemo(() => new Date(), []);
+  const fourWeeksLater = useMemo(() => addDays(today, 28), [today]);
+
+  const bookingsQuery = useQuery({
+    queryKey: queryKeys.bookings(),
+    queryFn: () => fetchBookings(today, fourWeeksLater),
+  });
+
+  const memberBookingsQuery = useQuery({
+    queryKey: queryKeys.memberBookings(user?.token ?? ''),
+    queryFn: () => fetchMemberBookings(user!.token),
+    enabled: !!user,
+  });
+
+  const loading = bookingsQuery.isLoading || (!!user && memberBookingsQuery.isLoading);
+  const error = bookingsQuery.error?.message ?? memberBookingsQuery.error?.message ?? null;
 
   // Restore saved scroll position after the list has finished loading
   useEffect(() => {
@@ -36,34 +52,22 @@ function ListPage() {
     requestAnimationFrame(() => window.scrollTo(0, y));
   }, [loading]);
 
-  useEffect(() => {
-    const today = new Date();
-    const fourWeeksLater = addDays(today, 28);
-    setLoading(true);
-
-    const allBookingsPromise = fetchBookings(today, fourWeeksLater);
-    const memberBookingsPromise = user
-      ? fetchMemberBookings(user.token)
-      : Promise.resolve(new Map<number, { bookingInIntervalId: number; onWaitingList: boolean; waitingListPosition: number | null }>());
-
-    Promise.all([allBookingsPromise, memberBookingsPromise])
-      .then(([all, memberMap]) => {
-        const enriched = all.map((b) => {
-          const entry = memberMap.get(b.id);
-          if (!entry) return b;
-          return {
-            ...b,
-            isBookedByUser: true,
-            userBookingInIntervalId: entry.bookingInIntervalId,
-            userOnWaitingList: entry.onWaitingList,
-            userWaitingListPosition: entry.waitingListPosition,
-          };
-        });
-        setBookings(enriched);
-      })
-      .catch((err: Error) => setError(err.message))
-      .finally(() => setLoading(false));
-  }, [user]);
+  const bookings = useMemo<DisplayBooking[]>(() => {
+    const all = bookingsQuery.data ?? [];
+    const memberMap = memberBookingsQuery.data;
+    if (!memberMap) return all;
+    return all.map((b) => {
+      const entry = memberMap.get(b.id);
+      if (!entry) return b;
+      return {
+        ...b,
+        isBookedByUser: true,
+        userBookingInIntervalId: entry.bookingInIntervalId,
+        userOnWaitingList: entry.onWaitingList,
+        userWaitingListPosition: entry.waitingListPosition,
+      };
+    });
+  }, [bookingsQuery.data, memberBookingsQuery.data]);
 
   const visibleBookings =
     filter === 'mine' ? bookings.filter((b) => b.isBookedByUser) : bookings;

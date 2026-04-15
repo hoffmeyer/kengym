@@ -1,8 +1,10 @@
 import { format } from "date-fns";
 import { Link, useNavigate } from "react-router-dom";
 import { flushSync } from "react-dom";
+import { useQueryClient } from "@tanstack/react-query";
 import type { DisplayBooking } from "../types";
-import { prefetchBookingDetail } from "../api";
+import { fetchBookingDetail } from "../api";
+import { queryKeys } from "../queryKeys";
 import { useAuth } from "../context/AuthContext";
 
 const LIST_SCROLL_KEY = 'list-scroll-y';
@@ -14,6 +16,7 @@ interface Props {
 export default function BookingCard({ booking }: Props) {
   const navigate = useNavigate();
   const { user } = useAuth();
+  const queryClient = useQueryClient();
   const startDate = new Date(booking.start);
   const endDate = new Date(booking.end);
 
@@ -45,7 +48,13 @@ export default function BookingCard({ booking }: Props) {
     <Link
       to={`/booking/${booking.id}`}
       state={booking}
-      onPointerEnter={() => prefetchBookingDetail(booking.id, user?.token)}
+      onPointerEnter={() =>
+        queryClient.prefetchQuery({
+          queryKey: queryKeys.bookingDetail(booking.id, user?.token),
+          queryFn: () => fetchBookingDetail(booking.id, user?.token),
+          staleTime: 30 * 1000,
+        })
+      }
       onClick={handleClick}
       className={`block bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
         booking.isBookedByUser && booking.userOnWaitingList
