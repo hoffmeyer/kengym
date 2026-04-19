@@ -264,12 +264,15 @@ export default function BookingDetail() {
             </p>
             {participants.length > 0 ? (
               <ul className="flex flex-col gap-1">
-                {participants.map((p, i) => (
-                  <li key={p.id} className="flex items-center gap-3 text-sm text-gray-700">
-                    <span className="w-5 text-right text-gray-300 text-xs shrink-0">{i + 1}</span>
-                    {p.bookedTo?.name ?? '–'}
-                  </li>
-                ))}
+                {participants.map((p, i) => {
+                  const isMe = user?.memberId === p.bookedTo?.id;
+                  return (
+                    <li key={p.id} className={`flex items-center gap-3 text-sm rounded-lg px-2 py-0.5 -mx-2 ${isMe ? 'bg-indigo-50 text-indigo-700 font-semibold' : 'text-gray-700'}`}>
+                      <span className="w-5 text-right text-gray-300 text-xs shrink-0">{i + 1}</span>
+                      {p.bookedTo?.name ?? '–'}
+                    </li>
+                  );
+                })}
               </ul>
             ) : (
               <p className="text-sm text-gray-400">Ingen tilmeldte</p>
@@ -282,12 +285,15 @@ export default function BookingDetail() {
                   Venteliste ({waitingCount})
                 </p>
                 <ul className="flex flex-col gap-1">
-                  {waitingList.map((p, i) => (
-                    <li key={p.id} className="flex items-center gap-3 text-sm text-amber-700">
-                      <span className="w-5 text-right text-gray-300 text-xs shrink-0">{i + 1}</span>
-                      {p.bookedTo?.name ?? '–'}
-                    </li>
-                  ))}
+                  {waitingList.map((p, i) => {
+                    const isMe = user?.memberId === p.bookedTo?.id;
+                    return (
+                      <li key={p.id} className={`flex items-center gap-3 text-sm rounded-lg px-2 py-0.5 -mx-2 ${isMe ? 'bg-amber-50 text-amber-800 font-semibold' : 'text-amber-700'}`}>
+                        <span className="w-5 text-right text-gray-300 text-xs shrink-0">{i + 1}</span>
+                        {p.bookedTo?.name ?? '–'}
+                      </li>
+                    );
+                  })}
                 </ul>
               </>
             )}
