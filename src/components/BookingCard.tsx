@@ -116,7 +116,7 @@ export default function BookingCard({ booking }: Props) {
             >
               {booking.isBookedByUser
                 ? booking.userOnWaitingList
-                  ? `I kø (${booking.userWaitingListPosition != null ? booking.userWaitingListPosition : ""})`.trim()
+                  ? 'I kø'
                   : "Tilmeldt"
                 : booking.isAvailable
                   ? "Ledig"

@@ -174,6 +174,12 @@ export default function BookingDetail() {
     : null;
   const isBooked = !!userEntry;
 
+  const waitingListEntries = detailInterval?.waitingList ?? [];
+  const userWaitingIndex = user
+    ? waitingListEntries.findIndex((e) => e.bookedTo?.id === user.memberId)
+    : -1;
+  const userWaitingPosition = userWaitingIndex >= 0 ? userWaitingIndex + 1 : null;
+
   return (
     <>
     <main className="max-w-2xl mx-auto px-4 pt-4 pb-10">
@@ -212,6 +218,13 @@ export default function BookingDetail() {
             {format(startDate, 'HH:mm')} – {format(endDate, 'HH:mm')}
           </p>
         </div>
+
+        {/* Waiting list position banner */}
+        {userWaitingPosition !== null && (
+          <div className="rounded-xl bg-amber-50 border border-amber-200 px-4 py-3 text-sm font-medium text-amber-800">
+            Du er nr. {userWaitingPosition} på ventelisten
+          </div>
+        )}
 
         {/* Spots fill bar */}
         <div className="flex flex-col gap-2">
