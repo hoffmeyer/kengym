@@ -12,6 +12,13 @@ const API_BASE = "https://www.conventus.dk";
 const ORGANIZATION_ID = 17742;
 const RESOURCE_ID = 44493;
 
+export class UnauthorizedError extends Error {
+  constructor() {
+    super("Unauthorized");
+    this.name = "UnauthorizedError";
+  }
+}
+
 function toDisplayBooking(booking: Booking): DisplayBooking {
   const interval = booking.intervals?.[0];
   const totalSpots = interval?.maxParticipants ?? booking.maxParticipants ?? 0;
@@ -144,6 +151,7 @@ export async function fetchMemberBookings(token: string): Promise<
     { headers: { Authorization: token } },
   );
 
+  if (response.status === 401) throw new UnauthorizedError();
   if (!response.ok) return new Map();
 
   const data: Booking[] = await response.json();
@@ -191,6 +199,7 @@ export async function bookSession(
   booking: Booking,
   detailInterval: IntervalDetail,
   token: string,
+  sendEmailReceipt: boolean = false,
 ): Promise<void> {
   const pad = (n: number) => String(n).padStart(2, "0");
   const fmtDT = (ts: number) => {
@@ -238,7 +247,7 @@ export async function bookSession(
     account: false,
     comment: null,
     department: null,
-    sendEmailReceipt: false,
+    sendEmailReceipt,
   };
 
   const response = await fetch(endpoint, {

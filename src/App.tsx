@@ -2,7 +2,7 @@ import { Routes, Route } from 'react-router-dom';
 import { useEffect, useState, useMemo } from 'react';
 import { addDays } from 'date-fns';
 import { useQuery } from '@tanstack/react-query';
-import { fetchBookings, fetchMemberBookings } from './api';
+import { fetchBookings, fetchMemberBookings, UnauthorizedError } from './api';
 import { useAuth } from './context/AuthContext';
 import { queryKeys } from './queryKeys';
 import type { DisplayBooking } from './types';
@@ -16,7 +16,7 @@ const LIST_SCROLL_KEY = 'kengym_list_scroll_y';
 const LIST_FILTER_KEY = 'kengym_list_filter';
 
 function ListPage() {
-  const { user } = useAuth();
+  const { user, logout } = useAuth();
   const [filter, setFilter] = useState<Filter>(
     () => (sessionStorage.getItem(LIST_FILTER_KEY) as Filter | null) ?? 'all'
   );
@@ -46,6 +46,12 @@ function ListPage() {
     queryFn: () => fetchMemberBookings(user!.token),
     enabled: !!user,
   });
+
+  useEffect(() => {
+    if (memberBookingsQuery.error instanceof UnauthorizedError) {
+      logout();
+    }
+  }, [memberBookingsQuery.error, logout]);
 
   const loading = bookingsQuery.isLoading || (!!user && memberBookingsQuery.isLoading);
   const error = bookingsQuery.error?.message ?? memberBookingsQuery.error?.message ?? null;
