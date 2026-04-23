@@ -10,9 +10,9 @@ const STORAGE_KEYS = {
 } as const;
 
 function readSession(): SessionUser | null {
-  const memberId = sessionStorage.getItem(STORAGE_KEYS.memberId);
-  const name = sessionStorage.getItem(STORAGE_KEYS.name);
-  const token = sessionStorage.getItem(STORAGE_KEYS.token);
+  const memberId = localStorage.getItem(STORAGE_KEYS.memberId);
+  const name = localStorage.getItem(STORAGE_KEYS.name);
+  const token = localStorage.getItem(STORAGE_KEYS.token);
   if (memberId && name && token) {
     return { memberId: Number(memberId), name, token };
   }
@@ -20,14 +20,14 @@ function readSession(): SessionUser | null {
 }
 
 function writeSession(user: SessionUser) {
-  sessionStorage.setItem(STORAGE_KEYS.memberId, String(user.memberId));
-  sessionStorage.setItem(STORAGE_KEYS.name, user.name);
-  sessionStorage.setItem(STORAGE_KEYS.token, user.token);
+  localStorage.setItem(STORAGE_KEYS.memberId, String(user.memberId));
+  localStorage.setItem(STORAGE_KEYS.name, user.name);
+  localStorage.setItem(STORAGE_KEYS.token, user.token);
 }
 
 function readProfiles(): AuthProfile[] {
   try {
-    const raw = sessionStorage.getItem(STORAGE_KEYS.profiles);
+    const raw = localStorage.getItem(STORAGE_KEYS.profiles);
     if (raw) return JSON.parse(raw) as AuthProfile[];
   } catch {
     /* ignore */
@@ -36,14 +36,14 @@ function readProfiles(): AuthProfile[] {
 }
 
 function writeProfiles(profiles: AuthProfile[]) {
-  sessionStorage.setItem(STORAGE_KEYS.profiles, JSON.stringify(profiles));
+  localStorage.setItem(STORAGE_KEYS.profiles, JSON.stringify(profiles));
 }
 
 function clearSession() {
-  sessionStorage.removeItem(STORAGE_KEYS.memberId);
-  sessionStorage.removeItem(STORAGE_KEYS.name);
-  sessionStorage.removeItem(STORAGE_KEYS.token);
-  sessionStorage.removeItem(STORAGE_KEYS.profiles);
+  localStorage.removeItem(STORAGE_KEYS.memberId);
+  localStorage.removeItem(STORAGE_KEYS.name);
+  localStorage.removeItem(STORAGE_KEYS.token);
+  localStorage.removeItem(STORAGE_KEYS.profiles);
 }
 
 interface AuthContextValue {
