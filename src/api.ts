@@ -12,6 +12,13 @@ const API_BASE = "https://www.conventus.dk";
 const ORGANIZATION_ID = 17742;
 const RESOURCE_ID = 44493;
 
+export class UnauthorizedError extends Error {
+  constructor() {
+    super("Unauthorized");
+    this.name = "UnauthorizedError";
+  }
+}
+
 function toDisplayBooking(booking: Booking): DisplayBooking {
   const interval = booking.intervals?.[0];
   const totalSpots = interval?.maxParticipants ?? booking.maxParticipants ?? 0;
@@ -97,16 +104,18 @@ export async function fetchBookingDetail(
 }
 
 export async function login(
-  credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string },
+  credential:
+    | { type: "email"; email: string }
+    | { type: "phone"; phoneNumber: string },
   password: string,
 ): Promise<AuthProfile[]> {
   const response = await fetch(`${API_BASE}/heimdall/rest/auth/member`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
-      country: credential.type === 'phone' ? 61 : null,
-      phoneNumber: credential.type === 'phone' ? credential.phoneNumber : null,
-      email: credential.type === 'email' ? credential.email : null,
+      country: credential.type === "phone" ? 61 : null,
+      phoneNumber: credential.type === "phone" ? credential.phoneNumber : null,
+      email: credential.type === "email" ? credential.email : null,
       password,
       passwordHashed: false,
       organization: ORGANIZATION_ID,
@@ -121,28 +130,38 @@ export async function login(
   const profiles: AuthProfile[] = data.profiles;
 
   if (!profiles || profiles.length === 0) {
-    throw new Error("Ingen profiler fundet");
+    throw new Error("Login fejlede");
   }
 
   return profiles;
 }
 
-export async function fetchMemberBookings(
-  token: string,
-): Promise<
-  Map<number, { bookingInIntervalId: number; onWaitingList: boolean; waitingListPosition: number | null }>
+export async function fetchMemberBookings(token: string): Promise<
+  Map<
+    number,
+    {
+      bookingInIntervalId: number;
+      onWaitingList: boolean;
+      waitingListPosition: number | null;
+    }
+  >
 > {
   const response = await fetch(
     `${API_BASE}/publicBooking/online/listMemberBookings?_=${Date.now()}`,
     { headers: { Authorization: token } },
   );
 
+  if (response.status === 401) throw new UnauthorizedError();
   if (!response.ok) return new Map();
 
   const data: Booking[] = await response.json();
   const map = new Map<
     number,
-    { bookingInIntervalId: number; onWaitingList: boolean; waitingListPosition: number | null }
+    {
+      bookingInIntervalId: number;
+      onWaitingList: boolean;
+      waitingListPosition: number | null;
+    }
   >();
 
   for (const booking of data) {
@@ -165,9 +184,10 @@ export async function fetchMemberBookings(
       map.set(booking.id, {
         bookingInIntervalId: waitingEntry.id,
         onWaitingList: true,
-        waitingListPosition: waitingEntry.position != null
-          ? waitingEntry.position / 10 // The API stores positions as multiples of 10
-          : null,
+        waitingListPosition:
+          waitingEntry.position != null
+            ? waitingEntry.position / 10 // The API stores positions as multiples of 10
+            : null,
       });
     }
   }
@@ -179,6 +199,7 @@ export async function bookSession(
   booking: Booking,
   detailInterval: IntervalDetail,
   token: string,
+  sendEmailReceipt: boolean = false,
 ): Promise<void> {
   const pad = (n: number) => String(n).padStart(2, "0");
   const fmtDT = (ts: number) => {
@@ -226,7 +247,7 @@ export async function bookSession(
     account: false,
     comment: null,
     department: null,
-    sendEmailReceipt: false,
+    sendEmailReceipt,
   };
 
   const response = await fetch(endpoint, {
