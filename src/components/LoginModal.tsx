@@ -195,6 +195,15 @@ export default function LoginModal({ onClose }: Props) {
             >
               {loading ? 'Logger ind…' : 'Log ind'}
             </button>
+
+            <a
+              href="https://www.conventus.dk/medlemslogin/before_login/glemt_password.php?forening=17742"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-sm text-indigo-600 hover:text-indigo-800 transition-colors self-end"
+            >
+              Glemt adgangskode?
+            </a>
           </form>
         )}
       </div>
