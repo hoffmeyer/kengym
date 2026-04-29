@@ -16,14 +16,23 @@ const queryClient = new QueryClient({
   },
 })
 
-createRoot(document.getElementById('root')!).render(
-  <StrictMode>
-    <BrowserRouter>
-      <QueryClientProvider client={queryClient}>
-        <AuthProvider>
-          <App />
-        </AuthProvider>
-      </QueryClientProvider>
-    </BrowserRouter>
-  </StrictMode>,
-)
+async function prepare() {
+  if (import.meta.env.VITE_MOCK === 'true') {
+    const { worker } = await import('./mocks/browser')
+    await worker.start({ onUnhandledRequest: 'bypass' })
+  }
+}
+
+prepare().then(() => {
+  createRoot(document.getElementById('root')!).render(
+    <StrictMode>
+      <BrowserRouter>
+        <QueryClientProvider client={queryClient}>
+          <AuthProvider>
+            <App />
+          </AuthProvider>
+        </QueryClientProvider>
+      </BrowserRouter>
+    </StrictMode>,
+  )
+})
