@@ -1,0 +1,527 @@
+{
+  "booking" : {
+    "id" : 21031270,
+    "organization" : {
+      "id" : 17742,
+      "name" : "Hvidovre Atletik & Motion",
+      "cvr" : 33833407,
+      "address" : "Sollentuna alle 1-3",
+      "address2" : "",
+      "zipcode" : 2650,
+      "city" : "Hvidovre"
+    },
+    "resource" : {
+      "id" : 44493,
+      "organization" : {
+        "id" : 17742,
+        "name" : "Hvidovre Atletik & Motion"
+      },
+      "name" : "CrossFit område",
+      "bookingCategoryRequired" : false,
+      "accessControl" : true
+    },
+    "start" : 1777474800000,
+    "end" : 1777478400000,
+    "title" : "WOD med Rasmus - onsdag kl. 17-18",
+    "organizationalUnit" : {
+      "department" : 65499,
+      "name" : "CrossFit Abonnement"
+    },
+    "accessControlUnlock" : false,
+    "serie" : 640937,
+    "bookingType" : "interval",
+    "bookingContext" : "ordinaryBooking",
+    "bookingGroups" : [ {
+      "group" : 923337,
+      "name" : "CrossFit - Holdtræning (tillæg til basis)"
+    } ],
+    "maxParticipants" : 16,
+    "getEventEnabled" : false,
+    "attendance" : false,
+    "participants" : [ ],
+    "intervals" : [ {
+      "id" : 10133112,
+      "maxParticipants" : 16,
+      "start" : 1777474800000,
+      "end" : 1777478400000,
+      "bookings" : [ {
+        "id" : 6004388,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314154,
+          "name" : "Alexandra Schackinger",
+          "cellphone" : {
+            "number" : 21863102,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "schack_25@hotmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 5984849,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314073,
+          "name" : "Charlotte Nielsen",
+          "cellphone" : {
+            "number" : 40345002,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "charlotte_dk@outlook.dk",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 5989842,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314038,
+          "name" : "Flemming Hoffmeyer",
+          "cellphone" : {
+            "number" : 51966262,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "flemming.b.h@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6028331,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314081,
+          "name" : "freja josephsen",
+          "cellphone" : {
+            "number" : 60621888,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "freja85@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 5989833,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314232,
+          "name" : "Heidi Munk Hoffmeyer",
+          "cellphone" : {
+            "number" : 60678187,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "heidi.s.munk@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6013527,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314117,
+          "name" : "Ida Bondorph Nielsen",
+          "cellphone" : {
+            "number" : 25173045,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "idabn@icloud.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6025844,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314186,
+          "name" : "Jacob Ehlert Frederiksen",
+          "cellphone" : {
+            "number" : 31746071,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "jacobolsens@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 5973261,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314097,
+          "name" : "Klaus Castagni Parasole Volhøj",
+          "cellphone" : {
+            "number" : 42204637,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "klaus.volhoej@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6016532,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314108,
+          "name" : "Lisa Snedker",
+          "cellphone" : {
+            "number" : 1442,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "lisasnedker@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 5984841,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314074,
+          "name" : "Martin Holger Hansen",
+          "cellphone" : {
+            "number" : 31314479,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "mhh@regnvandstanken.dk",
+          "key" : "1973922179"
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6018954,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314148,
+          "name" : "Morten Greiersen",
+          "cellphone" : {
+            "number" : 26828458,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "greiersen@me.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6026153,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314059,
+          "name" : "Nilas Dyrnesli",
+          "cellphone" : {
+            "number" : 42424246,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "nilasd@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6028578,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314043,
+          "name" : "Nina Filtenborg",
+          "cellphone" : {
+            "number" : 81880303,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "ninaclaus@yahoo.dk",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 5968561,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5501620,
+          "name" : "Per Nakai",
+          "cellphone" : {
+            "number" : 51332057,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "pernakai@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6010232,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314113,
+          "name" : "Signe Munksgaard",
+          "cellphone" : {
+            "number" : 22442906,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "signelonesdatter@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 5977768,
+        "organization" : null,
+        "state" : "booked",
+        "bookedTo" : {
+          "id" : 5314207,
+          "name" : "Tove Kirkegaard Clausen",
+          "cellphone" : {
+            "number" : 40983181,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "mail@tovekirkegaard.dk",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 0,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      } ],
+      "waitingList" : [ {
+        "id" : 6031646,
+        "organization" : null,
+        "state" : "waitingList",
+        "bookedTo" : {
+          "id" : 5395161,
+          "name" : "Josephine Chilli Sommer Olsen",
+          "cellphone" : {
+            "number" : 20541494,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "josedose00@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 80,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      }, {
+        "id" : 6033801,
+        "organization" : null,
+        "state" : "waitingList",
+        "bookedTo" : {
+          "id" : 5314219,
+          "name" : "Martin Lind Ommen",
+          "cellphone" : {
+            "number" : 40748473,
+            "countrycode" : 61,
+            "dialCode" : 45,
+            "alpha2" : "DK"
+          },
+          "email" : "martinlindommen@gmail.com",
+          "key" : ""
+        },
+        "participated" : null,
+        "remark" : null,
+        "remindBySms" : null,
+        "position" : 90,
+        "department" : null,
+        "pin" : null,
+        "attendance" : false
+      } ],
+      "numberOfBookings" : 16,
+      "numberOfWaitingListEntries" : 2,
+      "memberBooked" : false,
+      "memberReserved" : false,
+      "memberAddedToWaitingList" : false,
+      "waitingListPosition" : null,
+      "bookingInIntervalId" : null
+    } ]
+  },
+  "settings" : {
+    "departmentSettings" : {
+      "id" : 17743,
+      "organization" : {
+        "id" : 17742
+      },
+      "organizationalUnit" : {
+        "department" : 65499,
+        "name" : "CrossFit Abonnement"
+      },
+      "paymentCard" : false,
+      "counterPrDepartment" : false,
+      "counterPrResource" : false,
+      "counterPrMainResource" : false,
+      "counterPrCategory" : false,
+      "counterPrGroup" : false,
+      "showPersonsName" : true,
+      "showWaitingList" : true,
+      "showWaitingListPublic" : true,
+      "showComment" : false,
+      "showCommentPublic" : false,
+      "provideDepartment" : false,
+      "sendReceiptByEmail" : true,
+      "onlyLimitGroups" : true,
+      "allowCancellation" : true,
+      "allowCancellationTime" : "02:00:00"
+    },
+    "groupSettings" : null,
+    "combinedSettings" : {
+      "id" : 17743,
+      "organization" : {
+        "id" : 17742
+      },
+      "organizationalUnit" : {
+        "department" : 65499,
+        "name" : "CrossFit Abonnement"
+      },
+      "paymentCard" : false,
+      "counterPrDepartment" : false,
+      "counterPrResource" : false,
+      "counterPrMainResource" : false,
+      "counterPrCategory" : false,
+      "counterPrGroup" : false,
+      "showPersonsName" : true,
+      "showWaitingList" : true,
+      "showWaitingListPublic" : true,
+      "showComment" : false,
+      "showCommentPublic" : false,
+      "provideDepartment" : false,
+      "sendReceiptByEmail" : true,
+      "onlyLimitGroups" : true,
+      "allowCancellation" : true,
+      "allowCancellationTime" : "02:00:00"
+    }
+  }
+}

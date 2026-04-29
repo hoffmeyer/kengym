@@ -1,18 +1,30 @@
-// import { http, HttpResponse } from "msw";
+import { http, HttpResponse } from "msw";
+import getBookingsFixture from "./fixtures/getBookings.json";
+import intervalbookingFixture from "./fixtures/intervalbooking.json";
 
-// const API_BASE = "https://www.conventus.dk";
+const API_BASE = "https://www.conventus.dk";
 
 export const handlers = [
-  // Uncomment and implement handlers as needed:
+  http.post(`${API_BASE}/publicBooking/public/getBookings`, () => {
+    return HttpResponse.json(getBookingsFixture);
+  }),
 
-  // POST /publicBooking/public/getBookings
-  // http.post(`${API_BASE}/publicBooking/public/getBookings`, () => HttpResponse.json([])),
+  http.get(`${API_BASE}/publicBooking/public/intervalbooking/:id`, () => {
+    return HttpResponse.json(intervalbookingFixture);
+  }),
 
-  // GET /publicBooking/public/intervalbooking/:id
-  // http.get(`${API_BASE}/publicBooking/public/intervalbooking/:id`, () => HttpResponse.json({})),
-
-  // POST /heimdall/rest/auth/member
-  // http.post(`${API_BASE}/heimdall/rest/auth/member`, () => HttpResponse.json({ profiles: [] })),
+  http.post(`${API_BASE}/heimdall/rest/auth/member`, () => {
+    return HttpResponse.json({
+      organizationName: "Hvidovre Atletik & Motion",
+      profiles: [
+        {
+          memberId: 1234567,
+          name: "Mock Bruger",
+          token: "mock-token-abc123",
+        },
+      ],
+    });
+  }),
 
   // GET /publicBooking/online/listMemberBookings
   // http.get(`${API_BASE}/publicBooking/online/listMemberBookings`, () => HttpResponse.json([])),
