@@ -1,6 +1,7 @@
 import { http, HttpResponse } from "msw";
 import getBookingsFixture from "./fixtures/getBookings.json";
 import intervalbookingFixture from "./fixtures/intervalbooking.json";
+import listMemberBookingsFixture from "./fixtures/listMemberBookings.json";
 
 const API_BASE = "https://www.conventus.dk";
 
@@ -26,8 +27,9 @@ export const handlers = [
     });
   }),
 
-  // GET /publicBooking/online/listMemberBookings
-  // http.get(`${API_BASE}/publicBooking/online/listMemberBookings`, () => HttpResponse.json([])),
+  http.get(`${API_BASE}/publicBooking/online/listMemberBookings`, () => {
+    return HttpResponse.json(listMemberBookingsFixture);
+  }),
 
   // POST /publicBooking/online/book
   // http.post(`${API_BASE}/publicBooking/online/book`, () => new HttpResponse(null, { status: 200 })),

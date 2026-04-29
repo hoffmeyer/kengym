@@ -1,0 +1,537 @@
+[ {
+  "id" : 21020920,
+  "organization" : {
+    "id" : 17742,
+    "name" : "Hvidovre Atletik & Motion",
+    "cvr" : 33833407,
+    "address" : "Sollentuna alle 1-3",
+    "address2" : "",
+    "zipcode" : 2650,
+    "city" : "Hvidovre"
+  },
+  "resource" : {
+    "id" : 44493,
+    "organization" : {
+      "id" : 17742,
+      "name" : "Hvidovre Atletik & Motion"
+    },
+    "name" : "CrossFit område",
+    "bookingCategoryRequired" : false,
+    "accessControl" : true
+  },
+  "start" : 1777906800000,
+  "end" : 1777910400000,
+  "title" : "WOD med Stine - mandag kl. 17-18",
+  "info" : "WOD står for ‘’Workout of the Day’’. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige øvelser vil blive forklaret grundigt og gennemgået med udgangspunkt i det individuelle niveau.",
+  "text" : "<p>WOD st&aring;r for &lsquo;&rsquo;Workout of the Day&rsquo;&rsquo;. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige &oslash;velser vil blive forklaret grundigt og gennemg&aring;et med udgangspunkt i det individuelle niveau.</p>\n",
+  "bookedBy" : 166682,
+  "bookedByName" : "Therese Cicilie Holm",
+  "lastEditedBy" : 166682,
+  "lastEditedByName" : "Therese Cicilie Holm",
+  "organizationalUnit" : {
+    "department" : 65499,
+    "name" : "CrossFit Abonnement"
+  },
+  "accessControlUnlock" : false,
+  "serie" : 640272,
+  "bookingType" : "interval",
+  "bookingContext" : "ordinaryBooking",
+  "bookingGroups" : [ {
+    "group" : 923337,
+    "name" : "CrossFit - Holdtræning (tillæg til basis)"
+  } ],
+  "maxParticipants" : 16,
+  "getEventEnabled" : false,
+  "attendance" : false,
+  "participants" : [ ],
+  "intervals" : [ {
+    "id" : 10110745,
+    "maxParticipants" : 16,
+    "start" : 1777906800000,
+    "end" : 1777910400000,
+    "bookings" : [ {
+      "id" : 5989844,
+      "organization" : null,
+      "state" : "booked",
+      "bookedTo" : {
+        "id" : 5314038,
+        "name" : "Flemming Hoffmeyer",
+        "email" : "flemming.b.h@gmail.com"
+      },
+      "participated" : null,
+      "remark" : null,
+      "remindBySms" : null,
+      "position" : 0,
+      "department" : null,
+      "pin" : null,
+      "attendance" : false
+    } ],
+    "waitingList" : null,
+    "numberOfBookings" : 1,
+    "numberOfWaitingListEntries" : 0,
+    "memberBooked" : false,
+    "memberReserved" : false,
+    "memberAddedToWaitingList" : false,
+    "waitingListPosition" : null,
+    "bookingInIntervalId" : null
+  } ]
+}, {
+  "id" : 21020921,
+  "organization" : {
+    "id" : 17742,
+    "name" : "Hvidovre Atletik & Motion",
+    "cvr" : 33833407,
+    "address" : "Sollentuna alle 1-3",
+    "address2" : "",
+    "zipcode" : 2650,
+    "city" : "Hvidovre"
+  },
+  "resource" : {
+    "id" : 44493,
+    "organization" : {
+      "id" : 17742,
+      "name" : "Hvidovre Atletik & Motion"
+    },
+    "name" : "CrossFit område",
+    "bookingCategoryRequired" : false,
+    "accessControl" : true
+  },
+  "start" : 1778511600000,
+  "end" : 1778515200000,
+  "title" : "WOD med Stine - mandag kl. 17-18",
+  "info" : "WOD står for ‘’Workout of the Day’’. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige øvelser vil blive forklaret grundigt og gennemgået med udgangspunkt i det individuelle niveau.",
+  "text" : "<p>WOD st&aring;r for &lsquo;&rsquo;Workout of the Day&rsquo;&rsquo;. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige &oslash;velser vil blive forklaret grundigt og gennemg&aring;et med udgangspunkt i det individuelle niveau.</p>\n",
+  "bookedBy" : 166682,
+  "bookedByName" : "Therese Cicilie Holm",
+  "lastEditedBy" : 166682,
+  "lastEditedByName" : "Therese Cicilie Holm",
+  "organizationalUnit" : {
+    "department" : 65499,
+    "name" : "CrossFit Abonnement"
+  },
+  "accessControlUnlock" : false,
+  "serie" : 640272,
+  "bookingType" : "interval",
+  "bookingContext" : "ordinaryBooking",
+  "bookingGroups" : [ {
+    "group" : 923337,
+    "name" : "CrossFit - Holdtræning (tillæg til basis)"
+  } ],
+  "maxParticipants" : 16,
+  "getEventEnabled" : false,
+  "attendance" : false,
+  "participants" : [ ],
+  "intervals" : [ {
+    "id" : 10110746,
+    "maxParticipants" : 16,
+    "start" : 1778511600000,
+    "end" : 1778515200000,
+    "bookings" : [ {
+      "id" : 6002165,
+      "organization" : null,
+      "state" : "booked",
+      "bookedTo" : {
+        "id" : 5314038,
+        "name" : "Flemming Hoffmeyer",
+        "email" : "flemming.b.h@gmail.com"
+      },
+      "participated" : null,
+      "remark" : null,
+      "remindBySms" : null,
+      "position" : 0,
+      "department" : null,
+      "pin" : null,
+      "attendance" : false
+    } ],
+    "waitingList" : null,
+    "numberOfBookings" : 1,
+    "numberOfWaitingListEntries" : 0,
+    "memberBooked" : false,
+    "memberReserved" : false,
+    "memberAddedToWaitingList" : false,
+    "waitingListPosition" : null,
+    "bookingInIntervalId" : null
+  } ]
+}, {
+  "id" : 21020922,
+  "organization" : {
+    "id" : 17742,
+    "name" : "Hvidovre Atletik & Motion",
+    "cvr" : 33833407,
+    "address" : "Sollentuna alle 1-3",
+    "address2" : "",
+    "zipcode" : 2650,
+    "city" : "Hvidovre"
+  },
+  "resource" : {
+    "id" : 44493,
+    "organization" : {
+      "id" : 17742,
+      "name" : "Hvidovre Atletik & Motion"
+    },
+    "name" : "CrossFit område",
+    "bookingCategoryRequired" : false,
+    "accessControl" : true
+  },
+  "start" : 1779116400000,
+  "end" : 1779120000000,
+  "title" : "WOD med Stine - mandag kl. 17-18",
+  "info" : "WOD står for ‘’Workout of the Day’’. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige øvelser vil blive forklaret grundigt og gennemgået med udgangspunkt i det individuelle niveau.",
+  "text" : "<p>WOD st&aring;r for &lsquo;&rsquo;Workout of the Day&rsquo;&rsquo;. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige &oslash;velser vil blive forklaret grundigt og gennemg&aring;et med udgangspunkt i det individuelle niveau.</p>\n",
+  "bookedBy" : 166682,
+  "bookedByName" : "Therese Cicilie Holm",
+  "lastEditedBy" : 166682,
+  "lastEditedByName" : "Therese Cicilie Holm",
+  "organizationalUnit" : {
+    "department" : 65499,
+    "name" : "CrossFit Abonnement"
+  },
+  "accessControlUnlock" : false,
+  "serie" : 640272,
+  "bookingType" : "interval",
+  "bookingContext" : "ordinaryBooking",
+  "bookingGroups" : [ {
+    "group" : 923337,
+    "name" : "CrossFit - Holdtræning (tillæg til basis)"
+  } ],
+  "maxParticipants" : 16,
+  "getEventEnabled" : false,
+  "attendance" : false,
+  "participants" : [ ],
+  "intervals" : [ {
+    "id" : 10110747,
+    "maxParticipants" : 16,
+    "start" : 1779116400000,
+    "end" : 1779120000000,
+    "bookings" : [ {
+      "id" : 6012973,
+      "organization" : null,
+      "state" : "booked",
+      "bookedTo" : {
+        "id" : 5314038,
+        "name" : "Flemming Hoffmeyer",
+        "email" : "flemming.b.h@gmail.com"
+      },
+      "participated" : null,
+      "remark" : null,
+      "remindBySms" : null,
+      "position" : 0,
+      "department" : null,
+      "pin" : null,
+      "attendance" : false
+    } ],
+    "waitingList" : null,
+    "numberOfBookings" : 1,
+    "numberOfWaitingListEntries" : 0,
+    "memberBooked" : false,
+    "memberReserved" : false,
+    "memberAddedToWaitingList" : false,
+    "waitingListPosition" : null,
+    "bookingInIntervalId" : null
+  } ]
+}, {
+  "id" : 21020923,
+  "organization" : {
+    "id" : 17742,
+    "name" : "Hvidovre Atletik & Motion",
+    "cvr" : 33833407,
+    "address" : "Sollentuna alle 1-3",
+    "address2" : "",
+    "zipcode" : 2650,
+    "city" : "Hvidovre"
+  },
+  "resource" : {
+    "id" : 44493,
+    "organization" : {
+      "id" : 17742,
+      "name" : "Hvidovre Atletik & Motion"
+    },
+    "name" : "CrossFit område",
+    "bookingCategoryRequired" : false,
+    "accessControl" : true
+  },
+  "start" : 1779721200000,
+  "end" : 1779724800000,
+  "title" : "WOD med Stine - mandag kl. 17-18",
+  "info" : "WOD står for ‘’Workout of the Day’’. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige øvelser vil blive forklaret grundigt og gennemgået med udgangspunkt i det individuelle niveau.",
+  "text" : "<p>WOD st&aring;r for &lsquo;&rsquo;Workout of the Day&rsquo;&rsquo;. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige &oslash;velser vil blive forklaret grundigt og gennemg&aring;et med udgangspunkt i det individuelle niveau.</p>\n",
+  "bookedBy" : 166682,
+  "bookedByName" : "Therese Cicilie Holm",
+  "lastEditedBy" : 166682,
+  "lastEditedByName" : "Therese Cicilie Holm",
+  "organizationalUnit" : {
+    "department" : 65499,
+    "name" : "CrossFit Abonnement"
+  },
+  "accessControlUnlock" : false,
+  "serie" : 640272,
+  "bookingType" : "interval",
+  "bookingContext" : "ordinaryBooking",
+  "bookingGroups" : [ {
+    "group" : 923337,
+    "name" : "CrossFit - Holdtræning (tillæg til basis)"
+  } ],
+  "maxParticipants" : 16,
+  "getEventEnabled" : false,
+  "attendance" : false,
+  "participants" : [ ],
+  "intervals" : [ {
+    "id" : 10110748,
+    "maxParticipants" : 16,
+    "start" : 1779721200000,
+    "end" : 1779724800000,
+    "bookings" : [ {
+      "id" : 6033128,
+      "organization" : null,
+      "state" : "booked",
+      "bookedTo" : {
+        "id" : 5314038,
+        "name" : "Flemming Hoffmeyer",
+        "email" : "flemming.b.h@gmail.com"
+      },
+      "participated" : null,
+      "remark" : null,
+      "remindBySms" : null,
+      "position" : 0,
+      "department" : null,
+      "pin" : null,
+      "attendance" : false
+    } ],
+    "waitingList" : null,
+    "numberOfBookings" : 1,
+    "numberOfWaitingListEntries" : 0,
+    "memberBooked" : false,
+    "memberReserved" : false,
+    "memberAddedToWaitingList" : false,
+    "waitingListPosition" : null,
+    "bookingInIntervalId" : null
+  } ]
+}, {
+  "id" : 21031271,
+  "organization" : {
+    "id" : 17742,
+    "name" : "Hvidovre Atletik & Motion",
+    "cvr" : 33833407,
+    "address" : "Sollentuna alle 1-3",
+    "address2" : "",
+    "zipcode" : 2650,
+    "city" : "Hvidovre"
+  },
+  "resource" : {
+    "id" : 44493,
+    "organization" : {
+      "id" : 17742,
+      "name" : "Hvidovre Atletik & Motion"
+    },
+    "name" : "CrossFit område",
+    "bookingCategoryRequired" : false,
+    "accessControl" : true
+  },
+  "start" : 1778079600000,
+  "end" : 1778083200000,
+  "title" : "WOD med Rasmus - onsdag kl. 17-18",
+  "text" : "<p>WOD st&aring;r for &lsquo;&rsquo;Workout of the Day&rsquo;&rsquo;. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige &oslash;velser vil blive forklaret grundigt og gennemg&aring;et med udgangspunkt i det individuelle niveau.</p>\n",
+  "bookedBy" : 166682,
+  "bookedByName" : "Therese Cicilie Holm",
+  "lastEditedBy" : 166682,
+  "lastEditedByName" : "Therese Cicilie Holm",
+  "organizationalUnit" : {
+    "department" : 65499,
+    "name" : "CrossFit Abonnement"
+  },
+  "accessControlUnlock" : false,
+  "serie" : 640937,
+  "bookingType" : "interval",
+  "bookingContext" : "ordinaryBooking",
+  "bookingGroups" : [ {
+    "group" : 923337,
+    "name" : "CrossFit - Holdtræning (tillæg til basis)"
+  } ],
+  "maxParticipants" : 16,
+  "getEventEnabled" : false,
+  "attendance" : false,
+  "participants" : [ ],
+  "intervals" : [ {
+    "id" : 10133113,
+    "maxParticipants" : 16,
+    "start" : 1778079600000,
+    "end" : 1778083200000,
+    "bookings" : [ {
+      "id" : 5989845,
+      "organization" : null,
+      "state" : "booked",
+      "bookedTo" : {
+        "id" : 5314038,
+        "name" : "Flemming Hoffmeyer",
+        "email" : "flemming.b.h@gmail.com"
+      },
+      "participated" : null,
+      "remark" : null,
+      "remindBySms" : null,
+      "position" : 0,
+      "department" : null,
+      "pin" : null,
+      "attendance" : false
+    } ],
+    "waitingList" : null,
+    "numberOfBookings" : 1,
+    "numberOfWaitingListEntries" : 0,
+    "memberBooked" : false,
+    "memberReserved" : false,
+    "memberAddedToWaitingList" : false,
+    "waitingListPosition" : null,
+    "bookingInIntervalId" : null
+  } ]
+}, {
+  "id" : 21031272,
+  "organization" : {
+    "id" : 17742,
+    "name" : "Hvidovre Atletik & Motion",
+    "cvr" : 33833407,
+    "address" : "Sollentuna alle 1-3",
+    "address2" : "",
+    "zipcode" : 2650,
+    "city" : "Hvidovre"
+  },
+  "resource" : {
+    "id" : 44493,
+    "organization" : {
+      "id" : 17742,
+      "name" : "Hvidovre Atletik & Motion"
+    },
+    "name" : "CrossFit område",
+    "bookingCategoryRequired" : false,
+    "accessControl" : true
+  },
+  "start" : 1778684400000,
+  "end" : 1778688000000,
+  "title" : "WOD med Rasmus - onsdag kl. 17-18",
+  "text" : "<p>WOD st&aring;r for &lsquo;&rsquo;Workout of the Day&rsquo;&rsquo;. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige &oslash;velser vil blive forklaret grundigt og gennemg&aring;et med udgangspunkt i det individuelle niveau.</p>\n",
+  "bookedBy" : 166682,
+  "bookedByName" : "Therese Cicilie Holm",
+  "lastEditedBy" : 166682,
+  "lastEditedByName" : "Therese Cicilie Holm",
+  "organizationalUnit" : {
+    "department" : 65499,
+    "name" : "CrossFit Abonnement"
+  },
+  "accessControlUnlock" : false,
+  "serie" : 640937,
+  "bookingType" : "interval",
+  "bookingContext" : "ordinaryBooking",
+  "bookingGroups" : [ {
+    "group" : 923337,
+    "name" : "CrossFit - Holdtræning (tillæg til basis)"
+  } ],
+  "maxParticipants" : 16,
+  "getEventEnabled" : false,
+  "attendance" : false,
+  "participants" : [ ],
+  "intervals" : [ {
+    "id" : 10133114,
+    "maxParticipants" : 16,
+    "start" : 1778684400000,
+    "end" : 1778688000000,
+    "bookings" : [ {
+      "id" : 6002167,
+      "organization" : null,
+      "state" : "booked",
+      "bookedTo" : {
+        "id" : 5314038,
+        "name" : "Flemming Hoffmeyer",
+        "email" : "flemming.b.h@gmail.com"
+      },
+      "participated" : null,
+      "remark" : null,
+      "remindBySms" : null,
+      "position" : 0,
+      "department" : null,
+      "pin" : null,
+      "attendance" : false
+    } ],
+    "waitingList" : null,
+    "numberOfBookings" : 1,
+    "numberOfWaitingListEntries" : 0,
+    "memberBooked" : false,
+    "memberReserved" : false,
+    "memberAddedToWaitingList" : false,
+    "waitingListPosition" : null,
+    "bookingInIntervalId" : null
+  } ]
+}, {
+  "id" : 21031273,
+  "organization" : {
+    "id" : 17742,
+    "name" : "Hvidovre Atletik & Motion",
+    "cvr" : 33833407,
+    "address" : "Sollentuna alle 1-3",
+    "address2" : "",
+    "zipcode" : 2650,
+    "city" : "Hvidovre"
+  },
+  "resource" : {
+    "id" : 44493,
+    "organization" : {
+      "id" : 17742,
+      "name" : "Hvidovre Atletik & Motion"
+    },
+    "name" : "CrossFit område",
+    "bookingCategoryRequired" : false,
+    "accessControl" : true
+  },
+  "start" : 1779289200000,
+  "end" : 1779292800000,
+  "title" : "WOD med Rasmus - onsdag kl. 17-18",
+  "text" : "<p>WOD st&aring;r for &lsquo;&rsquo;Workout of the Day&rsquo;&rsquo;. Timen starter med en opvarmning, efterfulgt af en teknik- eller styrkedel og sluttes af med en WOD. De forskellige &oslash;velser vil blive forklaret grundigt og gennemg&aring;et med udgangspunkt i det individuelle niveau.</p>\n",
+  "bookedBy" : 166682,
+  "bookedByName" : "Therese Cicilie Holm",
+  "lastEditedBy" : 166682,
+  "lastEditedByName" : "Therese Cicilie Holm",
+  "organizationalUnit" : {
+    "department" : 65499,
+    "name" : "CrossFit Abonnement"
+  },
+  "accessControlUnlock" : false,
+  "serie" : 640937,
+  "bookingType" : "interval",
+  "bookingContext" : "ordinaryBooking",
+  "bookingGroups" : [ {
+    "group" : 923337,
+    "name" : "CrossFit - Holdtræning (tillæg til basis)"
+  } ],
+  "maxParticipants" : 16,
+  "getEventEnabled" : false,
+  "attendance" : false,
+  "participants" : [ ],
+  "intervals" : [ {
+    "id" : 10133115,
+    "maxParticipants" : 16,
+    "start" : 1779289200000,
+    "end" : 1779292800000,
+    "bookings" : [ {
+      "id" : 6021547,
+      "organization" : null,
+      "state" : "booked",
+      "bookedTo" : {
+        "id" : 5314038,
+        "name" : "Flemming Hoffmeyer",
+        "email" : "flemming.b.h@gmail.com"
+      },
+      "participated" : null,
+      "remark" : null,
+      "remindBySms" : null,
+      "position" : 0,
+      "department" : null,
+      "pin" : null,
+      "attendance" : false
+    } ],
+    "waitingList" : null,
+    "numberOfBookings" : 1,
+    "numberOfWaitingListEntries" : 0,
+    "memberBooked" : false,
+    "memberReserved" : false,
+    "memberAddedToWaitingList" : false,
+    "waitingListPosition" : null,
+    "bookingInIntervalId" : null
+  } ]
+} ]
