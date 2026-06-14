@@ -1,0 +1,6 @@
+{
+  "errorCode": 40950,
+  "message": "Cancellation of booking is not allowed. Too close to booking time"
+}
+
+Status code 409 Conflict

@@ -32,11 +32,20 @@ export const handlers = [
   }),
 
   // POST /publicBooking/online/book
-  // http.post(`${API_BASE}/publicBooking/online/book`, () => new HttpResponse(null, { status: 200 })),
+  http.post(
+    `${API_BASE}/publicBooking/online/book`,
+    () => new HttpResponse(null, { status: 200 }),
+  ),
 
   // POST /publicBooking/online/bookWaitingList
-  // http.post(`${API_BASE}/publicBooking/online/bookWaitingList`, () => new HttpResponse(null, { status: 200 })),
+  http.post(
+    `${API_BASE}/publicBooking/online/bookWaitingList`,
+    () => new HttpResponse(null, { status: 200 }),
+  ),
 
   // DELETE /publicBooking/online/cancelMemberBooking
-  // http.delete(`${API_BASE}/publicBooking/online/cancelMemberBooking`, () => new HttpResponse(null, { status: 200 })),
+  http.delete(
+    `${API_BASE}/publicBooking/online/cancelMemberBooking`,
+    () => new HttpResponse(null, { status: 200 }),
+  ),
 ];
