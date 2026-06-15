@@ -10,18 +10,157 @@ body {
 }
 
 @keyframes slide-in-from-right {
-  from { transform: translateX(30px); opacity: 0; }
-  to   { transform: translateX(0);    opacity: 1; }
+  from {
+    transform: translateX(30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes slide-in-from-left {
-  from { transform: translateX(-30px); opacity: 0; }
-  to   { transform: translateX(0);     opacity: 1; }
+  from {
+    transform: translateX(-30px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 @keyframes fade-out {
-  from { opacity: 1; }
-  to   { opacity: 0; }
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+/* ── Special event highlighting ───────────────────────────────── */
+
+/* Animated gradient border + soft glow that draws the eye */
+.special-event-card {
+  background:
+    linear-gradient(#ffffff, #ffffff) padding-box,
+    linear-gradient(120deg, #4f46e5, #06b6d4, #818cf8, #8b5cf6, #4f46e5)
+      border-box;
+  background-size:
+    100% 100%,
+    300% 100%;
+  border: 1.5px solid transparent;
+  box-shadow: 0 6px 18px -10px rgba(79, 70, 229, 0.5);
+  animation:
+    special-border 6s linear infinite,
+    special-glow 3s ease-in-out infinite;
+}
+
+.special-event-card:hover {
+  box-shadow: 0 9px 22px -8px rgba(79, 70, 229, 0.62);
+}
+
+@keyframes special-border {
+  from {
+    background-position:
+      0% 0%,
+      0% 50%;
+  }
+  to {
+    background-position:
+      0% 0%,
+      300% 50%;
+  }
+}
+
+@keyframes special-glow {
+  0%,
+  100% {
+    box-shadow: 0 6px 18px -10px rgba(79, 70, 229, 0.42);
+  }
+  50% {
+    box-shadow: 0 8px 22px -8px rgba(79, 70, 229, 0.6);
+  }
+}
+
+/* Diagonal shimmer that sweeps across the card */
+.special-event-shimmer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    110deg,
+    transparent 30%,
+    rgba(255, 255, 255, 0.55) 50%,
+    transparent 70%
+  );
+  transform: translateX(-120%);
+  animation: special-shimmer 3.5s ease-in-out infinite;
+}
+
+@keyframes special-shimmer {
+  0% {
+    transform: translateX(-120%);
+  }
+  60%,
+  100% {
+    transform: translateX(120%);
+  }
+}
+
+/* Gentle float for the "special" badge */
+@keyframes special-badge-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.special-event-badge {
+  animation: special-badge-pulse 2.2s ease-in-out infinite;
+}
+
+/* Animated gradient text for the special event title */
+.special-event-title {
+  background: linear-gradient(
+    100deg,
+    #4f46e5,
+    #06b6d4,
+    #818cf8,
+    #8b5cf6,
+    #4f46e5
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: special-title-shift 5s linear infinite;
+}
+
+@keyframes special-title-shift {
+  from {
+    background-position: 0% 50%;
+  }
+  to {
+    background-position: 200% 50%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .special-event-card,
+  .special-event-shimmer,
+  .special-event-badge,
+  .special-event-title {
+    animation: none;
+  }
+  .special-event-shimmer {
+    display: none;
+  }
 }
 
 /* Forward navigation: fade out, slide in from right */

@@ -7,7 +7,7 @@ import { fetchBookingDetail } from "../api";
 import { queryKeys } from "../queryKeys";
 import { useAuth } from "../context/AuthContext";
 
-const LIST_SCROLL_KEY = 'kengym_list_scroll_y';
+const LIST_SCROLL_KEY = "kengym_list_scroll_y";
 
 interface Props {
   booking: DisplayBooking;
@@ -19,6 +19,8 @@ export default function BookingCard({ booking }: Props) {
   const queryClient = useQueryClient();
   const startDate = new Date(booking.start);
   const endDate = new Date(booking.end);
+
+  const isSpecial = booking.serie === undefined;
 
   const timeRange = `${format(startDate, "HH:mm")} – ${format(endDate, "HH:mm")}`;
   const spotsLabel = `${booking.availableSpots} / ${booking.totalSpots}`;
@@ -46,6 +48,7 @@ export default function BookingCard({ booking }: Props) {
 
   return (
     <Link
+      id={`booking-${booking.id}`}
       to={`/booking/${booking.id}`}
       state={booking}
       onPointerEnter={() =>
@@ -56,14 +59,19 @@ export default function BookingCard({ booking }: Props) {
         })
       }
       onClick={handleClick}
-      className={`block bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
-        booking.isBookedByUser && booking.userOnWaitingList
-          ? 'border-amber-300 hover:border-amber-400'
-          : booking.isBookedByUser
-          ? 'border-indigo-300 hover:border-indigo-400'
-          : 'border-gray-100 hover:border-indigo-200'
+      className={`relative block overflow-hidden bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
+        isSpecial
+          ? "special-event-card"
+          : booking.isBookedByUser && booking.userOnWaitingList
+            ? "border-amber-300 hover:border-amber-400"
+            : booking.isBookedByUser
+              ? "border-indigo-300 hover:border-indigo-400"
+              : "border-gray-100 hover:border-indigo-200"
       }`}
     >
+      {isSpecial && (
+        <span className="special-event-shimmer" aria-hidden="true" />
+      )}
       {/*
         Mobile: 2×2 grid
           [time]        [description]
@@ -72,7 +80,7 @@ export default function BookingCard({ booking }: Props) {
         sm+: single flex row
           [time] [description …flex-1] [bar+spots] [badge+btn]
       */}
-      <div className="grid grid-cols-[1fr_5rem] grid-rows-2 gap-x-3 gap-y-2 sm:flex sm:flex-row sm:items-center sm:gap-4">
+      <div className="grid grid-cols-[1fr_5rem] grid-rows-2 gap-x-3 gap-y-2 sm:flex sm:flex-row sm:items-center sm:gap-4 relative z-10">
         {/* Time — col1 row1 on mobile; leftmost on desktop */}
         <p className="text-sm font-semibold text-indigo-600 whitespace-nowrap self-center">
           {timeRange}
@@ -95,7 +103,11 @@ export default function BookingCard({ booking }: Props) {
 
         {/* Description — col1 row2 on mobile; grows on desktop */}
         <div className="sm:order-2 sm:flex-1 min-w-0 self-center">
-          <p className="text-sm font-semibold text-gray-900 leading-snug truncate">
+          <p
+            className={`text-sm font-semibold leading-snug truncate ${
+              isSpecial ? "special-event-title" : "text-gray-900"
+            }`}
+          >
             {booking.title}
           </p>
         </div>
@@ -106,17 +118,17 @@ export default function BookingCard({ booking }: Props) {
             <span
               className={`inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold ${
                 booking.isBookedByUser && booking.userOnWaitingList
-                  ? 'bg-amber-100 text-amber-700'
+                  ? "bg-amber-100 text-amber-700"
                   : booking.isBookedByUser
-                  ? 'bg-indigo-100 text-indigo-700'
-                  : booking.isAvailable
-                  ? 'bg-emerald-100 text-emerald-700'
-                  : 'bg-red-100 text-red-700'
+                    ? "bg-indigo-100 text-indigo-700"
+                    : booking.isAvailable
+                      ? "bg-emerald-100 text-emerald-700"
+                      : "bg-red-100 text-red-700"
               }`}
             >
               {booking.isBookedByUser
                 ? booking.userOnWaitingList
-                  ? 'I kø'
+                  ? "I kø"
                   : "Tilmeldt"
                 : booking.isAvailable
                   ? "Ledig"

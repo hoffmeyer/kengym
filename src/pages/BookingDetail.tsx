@@ -145,9 +145,9 @@ export default function BookingDetail() {
   function handleAddToCalendar() {
     const blob = buildIcsBlob(booking!);
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
+    const a = document.createElement("a");
     a.href = url;
-    a.download = `${booking!.title.replace(/[^a-zA-Z0-9æøåÆØÅ]/g, '_')}.ics`;
+    a.download = `${booking!.title.replace(/[^a-zA-Z0-9æøåÆØÅ]/g, "_")}.ics`;
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
@@ -185,6 +185,8 @@ export default function BookingDetail() {
 
   const startDate = new Date(booking.start);
   const endDate = new Date(booking.end);
+
+  const isSpecial = booking.serie === undefined;
 
   const filledPct =
     booking.totalSpots > 0
@@ -234,10 +236,18 @@ export default function BookingDetail() {
           ← Tilbage
         </button>
 
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 flex flex-col gap-5">
+        <div
+          className={`relative overflow-hidden rounded-2xl shadow-sm p-6 flex flex-col gap-5 ${
+            isSpecial ? "special-event-card" : "bg-white border border-gray-100"
+          }`}
+        >
           {/* Title + status */}
           <div className="flex items-start justify-between gap-3">
-            <h1 className="text-xl font-bold text-gray-900 leading-snug">
+            <h1
+              className={`text-xl font-bold leading-snug ${
+                isSpecial ? "special-event-title" : "text-gray-900"
+              }`}
+            >
               {booking.title}
             </h1>
             <span
@@ -263,8 +273,20 @@ export default function BookingDetail() {
                 title="Tilføj til kalender"
                 className="text-gray-800 hover:text-indigo-600 transition-colors"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M4 8H20M4 8V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8036C17.9215 20 18.4805 20 18.9079 19.7822C19.2842 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V8M4 8V7.2002C4 6.08009 4 5.51962 4.21799 5.0918C4.40973 4.71547 4.71547 4.40973 5.0918 4.21799C5.51962 4 6.08009 4 7.2002 4H8M20 8V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2842 4.40973 18.9079 4.21799C18.4801 4 17.9203 4 16.8002 4H16M8 4H16M8 4V2M16 4V2M14.5 14H12M12 14H9.5M12 14V11.5M12 14V16.5" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                <svg
+                  width="20"
+                  height="20"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M4 8H20M4 8V16.8002C4 17.9203 4 18.4801 4.21799 18.9079C4.40973 19.2842 4.71547 19.5905 5.0918 19.7822C5.5192 20 6.07899 20 7.19691 20H16.8036C17.9215 20 18.4805 20 18.9079 19.7822C19.2842 19.5905 19.5905 19.2842 19.7822 18.9079C20 18.4805 20 17.9215 20 16.8036V8M4 8V7.2002C4 6.08009 4 5.51962 4.21799 5.0918C4.40973 4.71547 4.71547 4.40973 5.0918 4.21799C5.51962 4 6.08009 4 7.2002 4H8M20 8V7.19691C20 6.07899 20 5.5192 19.7822 5.0918C19.5905 4.71547 19.2842 4.40973 18.9079 4.21799C18.4801 4 17.9203 4 16.8002 4H16M8 4H16M8 4V2M16 4V2M14.5 14H12M12 14H9.5M12 14V11.5M12 14V16.5"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                  />
                 </svg>
               </button>
             </div>
