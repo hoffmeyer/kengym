@@ -165,7 +165,7 @@ function ListPage() {
         </div>
       )}
       {/* Special event streamer */}
-      {!loading && specialEvents.length > 0 && (
+      {!loading && specialEvents.length > 0 && filter === "all" && (
         <SpecialEventStreamer events={specialEvents} />
       )}
       <BookingList bookings={visibleBookings} loading={loading} error={error} />
