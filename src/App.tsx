@@ -108,8 +108,8 @@ function ListPage() {
     }
   }, [bookings, filter]);
 
-  const firstSpecial = useMemo(
-    () => visibleBookings.find(isSpecialEvent) ?? null,
+  const specialEvents = useMemo(
+    () => visibleBookings.filter(isSpecialEvent),
     [visibleBookings],
   );
 
@@ -165,8 +165,8 @@ function ListPage() {
         </div>
       )}
       {/* Special event streamer */}
-      {!loading && firstSpecial && (
-        <SpecialEventStreamer event={firstSpecial} />
+      {!loading && specialEvents.length > 0 && (
+        <SpecialEventStreamer events={specialEvents} />
       )}
       <BookingList bookings={visibleBookings} loading={loading} error={error} />
     </main>
