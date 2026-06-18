@@ -11,7 +11,7 @@ import BookingList from "./components/BookingList";
 import SpecialEventStreamer from "./components/SpecialEventStreamer";
 import BookingDetail from "./pages/BookingDetail";
 
-type Filter = "all" | "mine";
+type Filter = "all" | "mine" | "events";
 
 const LIST_SCROLL_KEY = "kengym_list_scroll_y";
 const LIST_FILTER_KEY = "kengym_list_filter";
@@ -38,11 +38,11 @@ function ListPage() {
 
   const today = useMemo(() => new Date(), []);
   const fourWeeksLater = useMemo(() => addDays(today, 28), [today]);
-  const threeMonthsLater = useMemo(() => addMonths(today, 3), [today]);
+  const sixMonthsLater = useMemo(() => addMonths(today, 6), [today]);
 
   const bookingsQuery = useQuery({
     queryKey: queryKeys.bookings(),
-    queryFn: () => fetchBookings(today, threeMonthsLater),
+    queryFn: () => fetchBookings(today, sixMonthsLater),
   });
 
   const memberBookingsQuery = useQuery({
@@ -96,8 +96,17 @@ function ListPage() {
     });
   }, [bookingsQuery.data, memberBookingsQuery.data]);
 
-  const visibleBookings =
-    filter === "mine" ? bookings.filter((b) => b.isBookedByUser) : bookings;
+  const visibleBookings = useMemo(() => {
+    switch (filter) {
+      case "mine":
+        return bookings.filter((b) => b.isBookedByUser);
+      case "events":
+        return bookings.filter(isSpecialEvent);
+      case "all":
+      default:
+        return bookings;
+    }
+  }, [bookings, filter]);
 
   const firstSpecial = useMemo(
     () => visibleBookings.find(isSpecialEvent) ?? null,
@@ -119,7 +128,7 @@ function ListPage() {
         </div>
       )}
       {/* Filter toggle */}
-      {user && !loading && (
+      {!loading && (
         <div className="flex gap-2 px-4 pt-4">
           <button
             onClick={() => applyFilter("all")}
@@ -132,15 +141,27 @@ function ListPage() {
             Alle
           </button>
           <button
-            onClick={() => applyFilter("mine")}
+            onClick={() => applyFilter("events")}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
-              filter === "mine"
+              filter === "events"
                 ? "bg-indigo-600 text-white"
                 : "bg-white border border-gray-200 text-gray-600 hover:border-indigo-300"
             }`}
           >
-            Mine
+            Events
           </button>
+          {user && (
+            <button
+              onClick={() => applyFilter("mine")}
+              className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
+                filter === "mine"
+                  ? "bg-indigo-600 text-white"
+                  : "bg-white border border-gray-200 text-gray-600 hover:border-indigo-300"
+              }`}
+            >
+              Mine
+            </button>
+          )}
         </div>
       )}
       {/* Special event streamer */}
