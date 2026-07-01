@@ -2,6 +2,7 @@ import { format } from "date-fns";
 import { da } from "date-fns/locale";
 import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
+import { flushSync } from "react-dom";
 import type { DisplayBooking } from "../types";
 
 interface Props {
@@ -28,9 +29,17 @@ export default function SpecialEventStreamer({ events }: Props) {
   }, [events.length]);
 
   const currentEvent = events[currentIndex];
+  const target = `/booking/${currentEvent.id}`;
 
-  function openEvent() {
-    navigate(`/booking/${currentEvent.id}`);
+  function openEvent(e: React.MouseEvent) {
+    e.preventDefault();
+    if (document.startViewTransition) {
+      document.startViewTransition(() => {
+        flushSync(() => navigate(target));
+      });
+    } else {
+      navigate(target);
+    }
   }
 
   function goToEvent(index: number) {

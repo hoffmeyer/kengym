@@ -1,25 +1,23 @@
-import { useLocation, useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { flushSync } from "react-dom";
 import { format } from "date-fns";
 import { da } from "date-fns/locale";
-import { addDays } from "date-fns";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import {
-  fetchBookings,
   fetchBookingDetail,
+  toDisplayBooking,
   bookSession,
   cancelBooking,
 } from "../api";
 import { useAuth } from "../context/AuthContext";
 import { queryKeys } from "../queryKeys";
-import type { DisplayBooking, BookingDetailResponse } from "../types";
+import type { BookingDetailResponse } from "../types";
 import LoginModal from "../components/LoginModal";
 import { buildIcsBlob } from "../utils/calendar";
 
 export default function BookingDetail() {
   const { id } = useParams<{ id: string }>();
-  const { state } = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const queryClient = useQueryClient();
@@ -34,24 +32,6 @@ export default function BookingDetail() {
     localStorage.setItem("kengym_emailReceipt", String(sendEmailReceipt));
   }, [sendEmailReceipt]);
 
-  // If navigated directly (no router state), fall back to the list query
-  const listQuery = useQuery({
-    queryKey: queryKeys.bookings(),
-    queryFn: () => fetchBookings(new Date(), addDays(new Date(), 28)),
-    enabled: !state,
-  });
-
-  const booking: DisplayBooking | null =
-    (state as DisplayBooking | null) ??
-    listQuery.data?.find((b) => String(b.id) === id) ??
-    null;
-
-  const loading = !state && listQuery.isLoading;
-  const error =
-    !state && !booking && !listQuery.isLoading
-      ? (listQuery.error?.message ?? "Booking ikke fundet.")
-      : null;
-
   const detailQuery = useQuery<BookingDetailResponse>({
     queryKey: queryKeys.bookingDetail(id!, user?.token),
     queryFn: () => fetchBookingDetail(id!, user?.token),
@@ -61,6 +41,13 @@ export default function BookingDetail() {
 
   const detail = detailQuery.data ?? null;
   const detailLoading = detailQuery.isLoading;
+
+  const booking = detail ? toDisplayBooking(detail.booking) : null;
+
+  const error =
+    !booking && !detailLoading
+      ? (detailQuery.error?.message ?? "Booking ikke fundet.")
+      : null;
 
   const bookMutation = useMutation({
     mutationFn: () => {
@@ -102,7 +89,7 @@ export default function BookingDetail() {
     function handlePopState() {
       if (!("startViewTransition" in document)) return;
       document.documentElement.dataset.navDir = "back";
-      const t = (document as any).startViewTransition(async () => {
+      const t = document.startViewTransition(async () => {
         await new Promise<void>((resolve) => setTimeout(resolve, 0));
         await new Promise<void>((resolve) =>
           requestAnimationFrame(() => requestAnimationFrame(() => resolve())),
@@ -120,7 +107,7 @@ export default function BookingDetail() {
   function navigateBack() {
     document.documentElement.dataset.navDir = "back";
     if ("startViewTransition" in document) {
-      const t = (document as any).startViewTransition(() => {
+      const t = document.startViewTransition(() => {
         flushSync(() => navigate("/"));
       });
       t.finished.then(() => {
@@ -154,7 +141,7 @@ export default function BookingDetail() {
     URL.revokeObjectURL(url);
   }
 
-  if (loading) {
+  if (detailLoading) {
     return (
       <main className="max-w-2xl mx-auto px-4 pt-6 animate-pulse">
         <div className="h-4 w-20 bg-gray-200 rounded mb-6" />

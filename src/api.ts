@@ -19,7 +19,7 @@ export class UnauthorizedError extends Error {
   }
 }
 
-function toDisplayBooking(booking: Booking): DisplayBooking {
+export function toDisplayBooking(booking: Booking): DisplayBooking {
   const interval = booking.intervals?.[0];
   const totalSpots = interval?.maxParticipants ?? booking.maxParticipants ?? 0;
   const bookedCount = interval?.numberOfBookings ?? 0;

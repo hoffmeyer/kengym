@@ -39,10 +39,10 @@ export default function BookingCard({ booking }: Props) {
     const target = `/booking/${booking.id}`;
     if (document.startViewTransition) {
       document.startViewTransition(() => {
-        flushSync(() => navigate(target, { state: booking }));
+        flushSync(() => navigate(target));
       });
     } else {
-      navigate(target, { state: booking });
+      navigate(target);
     }
   }
 
@@ -50,7 +50,6 @@ export default function BookingCard({ booking }: Props) {
     <Link
       id={`booking-${booking.id}`}
       to={`/booking/${booking.id}`}
-      state={booking}
       onPointerEnter={() =>
         queryClient.prefetchQuery({
           queryKey: queryKeys.bookingDetail(booking.id, user?.token),
