@@ -3,7 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { addDays, addMonths, isBefore, toDate } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { fetchBookings, fetchMemberBookings, UnauthorizedError } from "./api";
-import { useAuth } from "./context/AuthContext";
+import { useAuth } from "./context/useAuth";
 import { queryKeys } from "./queryKeys";
 import type { DisplayBooking } from "./types";
 import Header from "./components/Header";
@@ -94,7 +94,7 @@ function ListPage() {
         userWaitingListPosition: entry.waitingListPosition,
       };
     });
-  }, [bookingsQuery.data, memberBookingsQuery.data]);
+  }, [bookingsQuery.data, memberBookingsQuery.data, fourWeeksLater]);
 
   const visibleBookings = useMemo(() => {
     switch (filter) {

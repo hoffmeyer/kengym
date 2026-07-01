@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { DisplayBooking } from "../types";
 import { fetchBookingDetail } from "../api";
 import { queryKeys } from "../queryKeys";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 
 const LIST_SCROLL_KEY = "kengym_list_scroll_y";
 

@@ -1,7 +1,8 @@
-import { createContext, useContext, useState, type ReactNode } from 'react';
+import { useState, type ReactNode } from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 import { login as apiLogin } from '../api';
 import type { AuthProfile, SessionUser } from '../types';
+import { AuthContext } from './useAuth';
 
 const STORAGE_KEYS = {
   memberId: 'kengym_memberId',
@@ -46,17 +47,6 @@ function clearSession() {
   localStorage.removeItem(STORAGE_KEYS.token);
   localStorage.removeItem(STORAGE_KEYS.profiles);
 }
-
-interface AuthContextValue {
-  user: SessionUser | null;
-  profiles: AuthProfile[];
-  login: (credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string }, password: string) => Promise<AuthProfile[]>;
-  selectProfile: (profile: AuthProfile, allProfiles: AuthProfile[]) => void;
-  switchProfile: (profile: AuthProfile) => void;
-  logout: () => void;
-}
-
-const AuthContext = createContext<AuthContextValue | null>(null);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(readSession);
@@ -109,10 +99,4 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       {children}
     </AuthContext.Provider>
   );
-}
-
-export function useAuth(): AuthContextValue {
-  const ctx = useContext(AuthContext);
-  if (!ctx) throw new Error('useAuth must be used inside AuthProvider');
-  return ctx;
 }

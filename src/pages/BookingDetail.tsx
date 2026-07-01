@@ -10,7 +10,7 @@ import {
   bookSession,
   cancelBooking,
 } from "../api";
-import { useAuth } from "../context/AuthContext";
+import { useAuth } from "../context/useAuth";
 import { queryKeys } from "../queryKeys";
 import type { BookingDetailResponse } from "../types";
 import LoginModal from "../components/LoginModal";
