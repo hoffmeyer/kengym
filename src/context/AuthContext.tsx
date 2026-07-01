@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, type ReactNode } from 'react';
+import { useQueryClient } from '@tanstack/react-query';
 import { login as apiLogin } from '../api';
 import type { AuthProfile, SessionUser } from '../types';
 
@@ -60,6 +61,7 @@ const AuthContext = createContext<AuthContextValue | null>(null);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<SessionUser | null>(readSession);
   const [profiles, setProfiles] = useState<AuthProfile[]>(readProfiles);
+  const queryClient = useQueryClient();
 
   async function login(
     credential: { type: 'email'; email: string } | { type: 'phone'; phoneNumber: string },
@@ -78,6 +80,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     writeProfiles(allProfiles);
     setUser(sessionUser);
     setProfiles(allProfiles);
+    // Ensure no stale, previously-cached data (e.g. from an earlier session) is shown.
+    queryClient.invalidateQueries();
   }
 
   function switchProfile(profile: AuthProfile) {
@@ -88,12 +92,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
     writeSession(sessionUser);
     setUser(sessionUser);
+    // Cached bookings/member data may be stale or belong to the previous profile;
+    // force a fresh refetch for the newly active user.
+    queryClient.invalidateQueries();
   }
 
   function logout() {
     clearSession();
     setUser(null);
     setProfiles([]);
+    queryClient.invalidateQueries();
   }
 
   return (
