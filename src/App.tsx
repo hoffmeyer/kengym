@@ -16,10 +16,24 @@ type Filter = "all" | "mine" | "events";
 const LIST_SCROLL_KEY = "kengym_list_scroll_y";
 const LIST_FILTER_KEY = "kengym_list_filter";
 
+// iOS standalone (home-screen) launches sometimes leave a stale unpainted
+// strip above the header that only clears once a `position: sticky` element
+// actually engages. Force that engagement once, right after the list first
+// renders, instead of waiting for the user to scroll into it themselves.
+let didStandalonePaintNudge = false;
+
 function ListPage() {
   const { user, logout } = useAuth();
   const [filter, setFilter] = useState<Filter>(
     () => (sessionStorage.getItem(LIST_FILTER_KEY) as Filter | null) ?? "all",
+  );
+  // Covers the screen until the standalone-launch paint nudge below has run,
+  // so the user sees a plain dark loading state instead of the broken
+  // gradient it's working around.
+  const [hideForLaunchFix, setHideForLaunchFix] = useState(
+    () =>
+      !didStandalonePaintNudge &&
+      window.matchMedia("(display-mode: standalone)").matches,
   );
 
   function applyFilter(f: Filter) {
@@ -70,10 +84,31 @@ function ListPage() {
   useEffect(() => {
     if (loading) return;
     const saved = sessionStorage.getItem(LIST_SCROLL_KEY);
-    if (!saved) return;
     sessionStorage.removeItem(LIST_SCROLL_KEY);
-    const y = parseInt(saved, 10);
-    requestAnimationFrame(() => window.scrollTo(0, y));
+    const restoreY = saved ? parseInt(saved, 10) : 0;
+
+    if (
+      !didStandalonePaintNudge &&
+      window.matchMedia("(display-mode: standalone)").matches
+    ) {
+      const sticky = document.querySelector<HTMLElement>(".sticky");
+      if (sticky) {
+        didStandalonePaintNudge = true;
+        // Reveal before scrolling, not after — content hidden behind the
+        // overlay doesn't get a real repaint, so the nudge has to happen
+        // while visible for the fix to actually take effect.
+        setHideForLaunchFix(false);
+        const past = sticky.getBoundingClientRect().bottom + window.scrollY + 20;
+        window.scrollTo(0, past);
+        setTimeout(() => window.scrollTo(0, restoreY), 60);
+        return;
+      }
+    }
+
+    setHideForLaunchFix(false);
+    if (restoreY) {
+      requestAnimationFrame(() => window.scrollTo(0, restoreY));
+    }
   }, [loading]);
 
   const bookings = useMemo<DisplayBooking[]>(() => {
@@ -115,6 +150,15 @@ function ListPage() {
 
   return (
     <main className="max-w-2xl mx-auto">
+      {hideForLaunchFix && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center bg-gray-900">
+          <img
+            src="/logo.png"
+            alt=""
+            className="h-16 w-16 rounded-full object-cover ring-2 ring-white/20"
+          />
+        </div>
+      )}
       {scrolled && (
         <div className="fixed top-4 left-0 right-0 z-50 pointer-events-none">
           <div className="max-w-2xl mx-auto px-4 flex justify-end">
