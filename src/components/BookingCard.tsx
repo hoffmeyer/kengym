@@ -58,7 +58,7 @@ export default function BookingCard({ booking }: Props) {
         })
       }
       onClick={handleClick}
-      className={`relative block overflow-hidden bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
+      className={`relative isolate block overflow-hidden bg-white rounded-2xl shadow-sm border p-4 hover:shadow-md transition-all ${
         isSpecial
           ? "special-event-card"
           : booking.isBookedByUser && booking.userOnWaitingList
