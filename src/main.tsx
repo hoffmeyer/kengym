@@ -19,7 +19,7 @@ const queryClient = new QueryClient({
 async function prepare() {
   if (import.meta.env.VITE_MOCK === 'true') {
     const { worker } = await import('./mocks/browser')
-    await worker.start({ onUnhandledRequest: 'bypass' })
+    await worker.start({ onUnhandledFrame: 'bypass' })
   }
 }
 
