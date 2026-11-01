@@ -9,7 +9,7 @@
 ```bash
 npm run dev       # Start dev server (Vite HMR)
 npm run build     # Type-check + production build (tsc -b && vite build)
-npm run lint      # ESLint
+npm run lint      # Oxlint
 npm run preview   # Serve production build locally
 ```
 

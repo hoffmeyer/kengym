@@ -36,7 +36,7 @@ function ListPage() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  const today = useMemo(() => new Date(), []);
+  const [today] = useState(() => new Date());
   const fourWeeksLater = useMemo(() => addDays(today, 28), [today]);
   const sixMonthsLater = useMemo(() => addMonths(today, 6), [today]);
 
