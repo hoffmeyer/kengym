@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { useEffect, useState, useMemo } from "react";
-import { addDays, addMonths, isBefore, toDate } from "date-fns";
+import { addDays, addMonths, format, isBefore, toDate } from "date-fns";
 import { useQuery } from "@tanstack/react-query";
 import { fetchBookings, fetchMemberBookings, UnauthorizedError } from "./api";
 import { useAuth } from "./context/useAuth";
@@ -9,7 +9,14 @@ import type { DisplayBooking } from "./types";
 import Header from "./components/Header";
 import BookingList from "./components/BookingList";
 import SpecialEventStreamer from "./components/SpecialEventStreamer";
+import BookingFilterPopover from "./components/BookingFilterPopover";
 import BookingDetail from "./pages/BookingDetail";
+import {
+  loadBookingFilter,
+  matchesBookingFilter,
+  saveBookingFilter,
+  type BookingFilter,
+} from "./utils/bookingFilter";
 
 type Filter = "all" | "mine" | "events";
 
@@ -25,6 +32,14 @@ function ListPage() {
   function applyFilter(f: Filter) {
     sessionStorage.setItem(LIST_FILTER_KEY, f);
     setFilter(f);
+  }
+
+  const [bookingFilter, setBookingFilter] =
+    useState<BookingFilter>(loadBookingFilter);
+
+  function applyBookingFilter(f: BookingFilter) {
+    saveBookingFilter(f);
+    setBookingFilter(f);
   }
   const [scrolled, setScrolled] = useState(false);
 
@@ -97,16 +112,19 @@ function ListPage() {
   }, [bookingsQuery.data, memberBookingsQuery.data, fourWeeksLater]);
 
   const visibleBookings = useMemo(() => {
-    switch (filter) {
-      case "mine":
-        return bookings.filter((b) => b.isBookedByUser);
-      case "events":
-        return bookings.filter(isSpecialEvent);
-      case "all":
-      default:
-        return bookings;
-    }
-  }, [bookings, filter]);
+    const byType = (() => {
+      switch (filter) {
+        case "mine":
+          return bookings.filter((b) => b.isBookedByUser);
+        case "events":
+          return bookings.filter(isSpecialEvent);
+        case "all":
+        default:
+          return bookings;
+      }
+    })();
+    return byType.filter((b) => matchesBookingFilter(b, bookingFilter));
+  }, [bookings, filter, bookingFilter]);
 
   const specialEvents = useMemo(
     () => visibleBookings.filter(isSpecialEvent),
@@ -129,7 +147,7 @@ function ListPage() {
       )}
       {/* Filter toggle */}
       {!loading && (
-        <div className="flex gap-2 px-4 pt-4">
+        <div className="relative flex gap-2 px-4 pt-4">
           <button
             onClick={() => applyFilter("all")}
             className={`rounded-full px-4 py-1.5 text-sm font-medium transition-colors ${
@@ -162,6 +180,12 @@ function ListPage() {
               Mine
             </button>
           )}
+          <BookingFilterPopover
+            value={bookingFilter}
+            onChange={applyBookingFilter}
+            minDate={format(today, "yyyy-MM-dd")}
+            maxDate={format(sixMonthsLater, "yyyy-MM-dd")}
+          />
         </div>
       )}
       {/* Special event streamer */}
