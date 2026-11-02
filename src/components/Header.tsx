@@ -27,7 +27,7 @@ export default function Header() {
 
   return (
     <>
-      <header className="bg-gray-900 shadow-lg">
+      <header className="relative z-30 bg-gray-900 shadow-lg">
         <div className="max-w-2xl mx-auto px-4 py-4 flex items-start gap-3">
           <img
             src="/logo.png"
